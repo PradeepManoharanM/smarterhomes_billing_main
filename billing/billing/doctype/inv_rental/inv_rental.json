@@ -1,0 +1,208 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2025-04-05 10:54:23.549211",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "inv_date",
+  "property_name",
+  "meter_count",
+  "rent",
+  "totalrent",
+  "sgst",
+  "cgst",
+  "month_charge",
+  "column_break_wgvk",
+  "acct_number",
+  "inv_number",
+  "billing_from",
+  "billing_to",
+  "prev_balance",
+  "section_break_qetg",
+  "amt_rcvd",
+  "tds",
+  "discount",
+  "re_calculate_invoice",
+  "column_break_ppkr",
+  "total_pending",
+  "interest_on_pending",
+  "total_payable",
+  "inv_status",
+  "view_invoice",
+  "download_invoice",
+  "resend_invoice"
+ ],
+ "fields": [
+  {
+   "fieldname": "inv_date",
+   "fieldtype": "Date",
+   "label": "Invoice Date"
+  },
+  {
+   "fieldname": "meter_count",
+   "fieldtype": "Data",
+   "label": "Meter Count"
+  },
+  {
+   "fieldname": "rent",
+   "fieldtype": "Data",
+   "label": "Rent rate"
+  },
+  {
+   "fieldname": "totalrent",
+   "fieldtype": "Float",
+   "label": "Total Rent",
+   "precision": "1"
+  },
+  {
+   "fieldname": "sgst",
+   "fieldtype": "Float",
+   "label": "SGST",
+   "precision": "2"
+  },
+  {
+   "fieldname": "cgst",
+   "fieldtype": "Float",
+   "label": "CGST",
+   "precision": "2"
+  },
+  {
+   "fieldname": "month_charge",
+   "fieldtype": "Float",
+   "label": "Month's Charge",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_wgvk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "acct_number",
+   "fieldtype": "Data",
+   "label": "Acct Number"
+  },
+  {
+   "fieldname": "inv_number",
+   "fieldtype": "Data",
+   "label": "Invoice Number"
+  },
+  {
+   "fieldname": "billing_from",
+   "fieldtype": "Date",
+   "label": "Billing From"
+  },
+  {
+   "fieldname": "billing_to",
+   "fieldtype": "Date",
+   "label": "Billing To"
+  },
+  {
+   "fieldname": "prev_balance",
+   "fieldtype": "Float",
+   "label": "Previous Balance",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_qetg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amt_rcvd",
+   "fieldtype": "Float",
+   "label": "Amount Received",
+   "precision": "2"
+  },
+  {
+   "fieldname": "tds",
+   "fieldtype": "Float",
+   "label": "TDS",
+   "precision": "2"
+  },
+  {
+   "fieldname": "discount",
+   "fieldtype": "Float",
+   "label": "Discount",
+   "precision": "2"
+  },
+  {
+   "fieldname": "re_calculate_invoice",
+   "fieldtype": "Button",
+   "label": "Re calculate invoice"
+  },
+  {
+   "fieldname": "column_break_ppkr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_pending",
+   "fieldtype": "Float",
+   "label": "Total Pending",
+   "precision": "2"
+  },
+  {
+   "fieldname": "interest_on_pending",
+   "fieldtype": "Float",
+   "label": "Interest on Pending",
+   "precision": "2"
+  },
+  {
+   "fieldname": "total_payable",
+   "fieldtype": "Float",
+   "label": "Total Payable ",
+   "precision": "2"
+  },
+  {
+   "fieldname": "inv_status",
+   "fieldtype": "Select",
+   "label": "Invoice Status",
+   "options": "Not Generated\nGenerated\nSent"
+  },
+  {
+   "fieldname": "view_invoice",
+   "fieldtype": "Button",
+   "label": "View Invoice"
+  },
+  {
+   "fieldname": "download_invoice",
+   "fieldtype": "Button",
+   "label": "Download Invoice"
+  },
+  {
+   "fieldname": "resend_invoice",
+   "fieldtype": "Button",
+   "label": "Resend Invoice"
+  },
+  {
+   "fieldname": "property_name",
+   "fieldtype": "Link",
+   "label": "Property",
+   "options": "inv_property"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-05 17:51:48.812528",
+ "modified_by": "Administrator",
+ "module": "Billing",
+ "name": "Inv_rental",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

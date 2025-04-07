@@ -1,0 +1,123 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-05 14:09:30.694520",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "contracts_section",
+  "datefrom",
+  "column_break_qtow",
+  "dateto",
+  "column_break_eybq",
+  "contract_property",
+  "column_break_uimr",
+  "spacer",
+  "show_contracts",
+  "invoices_section",
+  "month",
+  "show_all_invoices_for_this_month",
+  "column_break_uylw",
+  "inv_property",
+  "show_all_invoices_for_this_property"
+ ],
+ "fields": [
+  {
+   "fieldname": "invoices_section",
+   "fieldtype": "Section Break",
+   "label": "Invoices"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Date",
+   "label": "Select Month"
+  },
+  {
+   "fieldname": "show_all_invoices_for_this_month",
+   "fieldtype": "Button",
+   "label": "Show all invoices for this month"
+  },
+  {
+   "fieldname": "column_break_uylw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "show_all_invoices_for_this_property",
+   "fieldtype": "Button",
+   "label": "Show all invoices for this property"
+  },
+  {
+   "fieldname": "contracts_section",
+   "fieldtype": "Section Break",
+   "label": "Contracts"
+  },
+  {
+   "default": "01-01-2017",
+   "fieldname": "datefrom",
+   "fieldtype": "Date",
+   "label": "From"
+  },
+  {
+   "fieldname": "column_break_qtow",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dateto",
+   "fieldtype": "Date",
+   "label": "To"
+  },
+  {
+   "fieldname": "column_break_eybq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "contract_property",
+   "fieldtype": "Link",
+   "label": "Property",
+   "options": "inv_property"
+  },
+  {
+   "fieldname": "column_break_uimr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "show_contracts",
+   "fieldtype": "Button",
+   "label": "ShowContracts"
+  },
+  {
+   "fieldname": "inv_property",
+   "fieldtype": "Link",
+   "label": "Select Property",
+   "options": "inv_property"
+  },
+  {
+   "fieldname": "spacer",
+   "fieldtype": "Heading",
+   "label": " "
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-04-06 08:21:51.798709",
+ "modified_by": "Administrator",
+ "module": "Billing",
+ "name": "invoicePage",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
