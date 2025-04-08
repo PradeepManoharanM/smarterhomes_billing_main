@@ -22,7 +22,6 @@
    "in_list_view": 1,
    "label": "Property Name",
    "reqd": 1,
-   "search_index": 1,
    "unique": 1
   },
   {
@@ -65,8 +64,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-04-05 18:03:36.250232",
+ "links": [
+  {
+   "link_doctype": "inv_meter_batch",
+   "link_fieldname": "property_name"
+  }
+ ],
+ "modified": "2025-04-08 12:18:21.041474",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "inv_property",
