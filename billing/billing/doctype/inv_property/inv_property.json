@@ -8,12 +8,13 @@
  "field_order": [
   "property_name",
   "address",
+  "gst",
+  "late_interest",
   "column_break_juhi",
   "contact_name",
   "phone",
   "email",
-  "gst",
-  "late_interest"
+  "email_cc"
  ],
  "fields": [
   {
@@ -27,7 +28,8 @@
   {
    "fieldname": "address",
    "fieldtype": "Text",
-   "label": "Address"
+   "label": "Address",
+   "max_height": "200px"
   },
   {
    "fieldname": "column_break_juhi",
@@ -46,7 +48,7 @@
   {
    "fieldname": "email",
    "fieldtype": "Data",
-   "label": "Email"
+   "label": "Primary Email"
   },
   {
    "default": "18",
@@ -61,6 +63,12 @@
    "fieldtype": "Percent",
    "label": "Late fee interest %",
    "precision": "2"
+  },
+  {
+   "fieldname": "email_cc",
+   "fieldtype": "Text",
+   "label": "Email CC list",
+   "max_height": "200px"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -70,7 +78,7 @@
    "link_fieldname": "property_name"
   }
  ],
- "modified": "2025-04-08 12:18:21.041474",
+ "modified": "2025-04-24 10:05:37.907494",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "inv_property",
