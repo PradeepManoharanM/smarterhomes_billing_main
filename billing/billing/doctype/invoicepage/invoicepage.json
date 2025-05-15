@@ -6,14 +6,13 @@
  "engine": "InnoDB",
  "field_order": [
   "contracts_section",
-  "datefrom",
+  "add_property",
   "column_break_qtow",
-  "dateto",
-  "column_break_eybq",
   "contract_property",
-  "column_break_uimr",
   "spacer",
-  "show_contracts",
+  "column_break_ksem",
+  "prop_details",
+  "contract_details",
   "invoices_section",
   "month",
   "show_all_invoices_for_this_month",
@@ -49,41 +48,17 @@
   {
    "fieldname": "contracts_section",
    "fieldtype": "Section Break",
-   "label": "Contracts"
-  },
-  {
-   "default": "01-01-2017",
-   "fieldname": "datefrom",
-   "fieldtype": "Date",
-   "label": "From"
+   "label": "Property"
   },
   {
    "fieldname": "column_break_qtow",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "dateto",
-   "fieldtype": "Date",
-   "label": "To"
-  },
-  {
-   "fieldname": "column_break_eybq",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "contract_property",
    "fieldtype": "Link",
-   "label": "Property",
+   "label": "Select Property",
    "options": "inv_property"
-  },
-  {
-   "fieldname": "column_break_uimr",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "show_contracts",
-   "fieldtype": "Button",
-   "label": "ShowContracts"
   },
   {
    "fieldname": "inv_property",
@@ -95,12 +70,31 @@
    "fieldname": "spacer",
    "fieldtype": "Heading",
    "label": " "
+  },
+  {
+   "fieldname": "add_property",
+   "fieldtype": "Button",
+   "label": "Add Property"
+  },
+  {
+   "fieldname": "column_break_ksem",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "prop_details",
+   "fieldtype": "Button",
+   "label": "Property Details"
+  },
+  {
+   "fieldname": "contract_details",
+   "fieldtype": "Button",
+   "label": "Contract Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-06 08:21:51.798709",
+ "modified": "2025-05-03 09:52:56.679848",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "invoicePage",

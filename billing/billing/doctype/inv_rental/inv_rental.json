@@ -1,6 +1,6 @@
 {
  "actions": [],
- "autoname": "autoincrement",
+ "autoname": "field:inv_number",
  "creation": "2025-04-05 10:54:23.549211",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -8,70 +8,57 @@
   "inv_date",
   "property_name",
   "meter_count",
-  "rent",
-  "totalrent",
-  "sgst",
-  "cgst",
-  "month_charge",
+  "rates",
+  "monthscharge",
   "column_break_wgvk",
   "acct_number",
   "inv_number",
-  "billing_from",
-  "billing_to",
   "prev_balance",
+  "sgst",
+  "cgst",
   "section_break_qetg",
-  "amt_rcvd",
-  "tds",
   "discount",
-  "re_calculate_invoice",
-  "column_break_ppkr",
-  "total_pending",
-  "interest_on_pending",
+  "late_fee",
   "total_payable",
-  "inv_status",
+  "re_calculate_invoice",
+  "approve_and_email_invoice",
   "view_invoice",
-  "download_invoice",
-  "resend_invoice"
+  "column_break_ppkr",
+  "inv_status",
+  "amt_rcvd",
+  "total_due",
+  "tds"
  ],
  "fields": [
   {
    "fieldname": "inv_date",
    "fieldtype": "Date",
-   "label": "Invoice Date"
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice Date",
+   "read_only": 1
   },
   {
    "fieldname": "meter_count",
    "fieldtype": "Data",
-   "label": "Meter Count"
-  },
-  {
-   "fieldname": "rent",
-   "fieldtype": "Data",
-   "label": "Rent rate"
-  },
-  {
-   "fieldname": "totalrent",
-   "fieldtype": "Float",
-   "label": "Total Rent",
-   "precision": "1"
+   "label": "Meter Count",
+   "max_height": "70px",
+   "read_only": 1
   },
   {
    "fieldname": "sgst",
    "fieldtype": "Float",
    "label": "SGST",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "cgst",
    "fieldtype": "Float",
    "label": "CGST",
-   "precision": "2"
-  },
-  {
-   "fieldname": "month_charge",
-   "fieldtype": "Float",
-   "label": "Month's Charge",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_wgvk",
@@ -80,28 +67,25 @@
   {
    "fieldname": "acct_number",
    "fieldtype": "Data",
-   "label": "Acct Number"
+   "label": "Acct Number",
+   "read_only": 1
   },
   {
    "fieldname": "inv_number",
    "fieldtype": "Data",
-   "label": "Invoice Number"
-  },
-  {
-   "fieldname": "billing_from",
-   "fieldtype": "Date",
-   "label": "Billing From"
-  },
-  {
-   "fieldname": "billing_to",
-   "fieldtype": "Date",
-   "label": "Billing To"
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Invoice Number",
+   "read_only": 1,
+   "unique": 1
   },
   {
    "fieldname": "prev_balance",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Previous Balance",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_qetg",
@@ -110,18 +94,23 @@
   {
    "fieldname": "amt_rcvd",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Amount Received",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "tds",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "TDS",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "discount",
    "fieldtype": "Float",
+   "in_list_view": 1,
    "label": "Discount",
    "precision": "2"
   },
@@ -135,58 +124,80 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "total_pending",
-   "fieldtype": "Float",
-   "label": "Total Pending",
-   "precision": "2"
-  },
-  {
-   "fieldname": "interest_on_pending",
-   "fieldtype": "Float",
-   "label": "Interest on Pending",
-   "precision": "2"
-  },
-  {
    "fieldname": "total_payable",
    "fieldtype": "Float",
-   "label": "Total Payable ",
-   "precision": "2"
+   "in_list_view": 1,
+   "label": "Total Payable",
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fieldname": "inv_status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Invoice Status",
-   "options": "Not Generated\nGenerated\nSent"
+   "options": "Generated\nApproved\nSent\nReGenerated",
+   "read_only": 1
   },
   {
    "fieldname": "view_invoice",
    "fieldtype": "Button",
-   "label": "View Invoice"
-  },
-  {
-   "fieldname": "download_invoice",
-   "fieldtype": "Button",
-   "label": "Download Invoice"
-  },
-  {
-   "fieldname": "resend_invoice",
-   "fieldtype": "Button",
-   "label": "Resend Invoice"
+   "label": "View PDF"
   },
   {
    "fieldname": "property_name",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Property",
-   "options": "inv_property"
+   "options": "inv_property",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rates",
+   "fieldtype": "Data",
+   "label": "Current Rates",
+   "max_height": "70px",
+   "read_only": 1
+  },
+  {
+   "fieldname": "late_fee",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Late Fee",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_due",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Due",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "monthscharge",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "This Month's Charge",
+   "precision": "1",
+   "read_only": 1
+  },
+  {
+   "fieldname": "approve_and_email_invoice",
+   "fieldtype": "Button",
+   "label": "Approve and Email Invoice"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-05 17:51:48.812528",
+ "modified": "2025-05-14 15:59:05.440013",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "Inv_rental",
- "naming_rule": "Autoincrement",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

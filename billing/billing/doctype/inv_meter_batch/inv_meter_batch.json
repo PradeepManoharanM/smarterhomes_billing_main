@@ -1,22 +1,28 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "autoincrement",
  "creation": "2025-04-05 10:40:06.431159",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "property_name",
-  "meter_count",
   "orig_rent",
   "start_date",
   "appr_rate",
-  "appr_period"
+  "appr_period",
+  "column_break_mybt",
+  "meter_count",
+  "meter_type",
+  "plantype",
+  "contract_period",
+  "naming_series"
  ],
  "fields": [
   {
    "fieldname": "property_name",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Property",
    "options": "inv_property",
    "reqd": 1
@@ -33,6 +39,7 @@
    "fieldname": "start_date",
    "fieldtype": "Date",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Billing Starting Date",
    "reqd": 1
   },
@@ -59,14 +66,41 @@
    "label": "Appreciation Period (months)",
    "non_negative": 1,
    "reqd": 1
+  },
+  {
+   "default": "10",
+   "fieldname": "contract_period",
+   "fieldtype": "Int",
+   "label": "Contract Period"
+  },
+  {
+   "fieldname": "column_break_mybt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "meter_type",
+   "fieldtype": "Data",
+   "label": "Meter Type"
+  },
+  {
+   "fieldname": "plantype",
+   "fieldtype": "Select",
+   "label": "Plan"
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-05 18:23:06.860040",
+ "modified": "2025-05-14 15:40:31.692994",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "inv_meter_batch",
+ "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [
   {
