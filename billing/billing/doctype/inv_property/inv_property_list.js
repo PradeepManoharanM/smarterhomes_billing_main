@@ -3,16 +3,42 @@ frappe.listview_settings['inv_property'] = {
 
     onload: function(listview) {
 
-        if (!frappe.user.has_role('Administrator')) {
+        const is_admin = frappe.user.has_role('Administrator');
+
+        listview.page.add_actions_menu_item(__('Custom'), function () {
+            const selected = listview.get_checked_items();
+            if (!selected.length) {
+                frappe.msgprint('Please select at least one record.');
+                return;
+            }
+
+            frappe.call({
+                method: 'billing.billing.doctype.inv_property.inv_property.new_trig',
+                args: {
+                    names: selected.map(row => row.name)
+                },
+                callback: function (r) {
+                    if (!r.exc) {
+                        frappe.msgprint(__('Marked as reviewed'));
+                        listview.refresh();
+                    }
+                }
+            });
+        });
+
+        if (!is_admin) {
+            // Hide specific UI elements for non-admins
             $('div.menu-btn-group').hide();
             listview.page.sidebar.toggle(false);
 
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.custom-btn-group').hide();
             }, 0);
 
+            // Clear all default action items
             listview.page.clear_actions_menu();
 
+            // Re-add only Export and Custom for non-admins
             listview.page.add_actions_menu_item(__('Export'), function () {
                 listview.export_report();
             });
@@ -39,5 +65,11 @@ frappe.listview_settings['inv_property'] = {
             });
         }
 
+        // Optional: Adjust column width
+        setTimeout(() => {
+            const columnTitle = 'Property Name';
+            $('th:contains("' + columnTitle + '")').css('width', '50px');
+            $('td[data-fieldname="property_name"]').css('width', '50px');
+        }, 500);
     }
 };
