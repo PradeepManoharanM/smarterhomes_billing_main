@@ -3,6 +3,27 @@ frappe.listview_settings['inv_property'] = {
     
     
     onload: function(listview) {
+
+        listview.page.add_actions_menu_item('Custom', function() {
+            const selected = listview.get_checked_items();
+            if (!selected.length) {
+                frappe.msgprint('Please select at least one record.');
+                return;
+            }
+
+            frappe.call({
+                method: 'billing.billing.doctype.inv_property.inv_property.new_trig', // Backend Python function
+                args: {
+                    names: selected.map(row => row.name)
+                },
+                callback: function(r) {
+                    if (!r.exc) {
+                        frappe.msgprint(__('Marked as reviewed'));
+                        listview.refresh();
+                    }
+                }
+            });
+        });
         
         // frappe.route_options = {};
         // listview.filter_area.clear();
@@ -33,6 +54,12 @@ frappe.listview_settings['inv_property'] = {
             listview.export_report();
         })
     }
-    },
 
+    setTimeout(() => {
+            // Adjust column width using CSS
+            const columnTitle = 'Property Name'; // Replace with your column label
+            $('th:contains("' + columnTitle + '")').css('width', '50px');
+            $('td[data-fieldname="property_name"]').css('width', '50px');
+        }, 500);
+    },
 };

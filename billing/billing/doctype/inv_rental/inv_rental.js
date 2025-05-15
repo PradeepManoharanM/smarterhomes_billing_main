@@ -6,6 +6,7 @@ frappe.ui.form.on("Inv_rental", {
             $('.form-sidebar').hide();
             $('.prev-doc').hide();
             $('.next-doc').hide();
+            frm.disable_save();
             // frm.fields_dict['property_name'].$wrapper.show();
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
@@ -13,7 +14,7 @@ frappe.ui.form.on("Inv_rental", {
                 // if (gatewayButton.length) {
                 //     gatewayButton.hide(); 
                 // }
-                
+                frm.disable_save();
                 setTimeout(() => {
                         
                     frm.page.menu.find('.dropdown-item:contains("Jump to field")').hide();

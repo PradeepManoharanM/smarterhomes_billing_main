@@ -7,8 +7,10 @@ frappe.ui.form.on('inv_property', {
         $('.form-sidebar').hide();
         $('.prev-doc').hide();
         $('.next-doc').hide();
+        
         // frm.fields_dict['property_name'].$wrapper.show();
         if (!frappe.user.has_role('Administrator')) {
+            
             $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
             // let gatewayButton = $('button[data-doctype="Gateway"]');
             // if (gatewayButton.length) {

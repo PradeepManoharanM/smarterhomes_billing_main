@@ -39,51 +39,37 @@ frappe.listview_settings['Inv_rental'] = {
             listview.export_report();
         })
     }
-        // listview.columns = [
-        //     {
-        //         label: __("Invoice Number"),
-        //         fieldname: "name",
-        //         fieldtype: "Data",
-        //         width: 250  // Increase width here (default ~180)
-        //     },
-        //     {
-        //         label: __("Invoice Date"),
-        //         fieldname: "invoice_date",
-        //         fieldtype: "Date",
-        //         width: 120
-        //     },
-            // {
-            //     label: __("Property"),
-            //     fieldname: "property",
-            //     fieldtype: "Data",
-            //     width: 220
-            // },
-            // {
-            //     label: __("Previous Balance"),
-            //     fieldname: "previous_balance",
-            //     fieldtype: "Currency",
-            //     width: 120
-            // },
-            // {
-            //     label: __("Total Payable"),
-            //     fieldname: "total_payable",
-            //     fieldtype: "Currency",
-            //     width: 120
-            // },
-            // {
-            //     label: __("Invoice Status"),
-            //     fieldname: "invoice_status",
-            //     fieldtype: "Data",
-            //     width: 150
-            // },
-            // {
-            //     label: __("Amount Received"),
-            //     fieldname: "amount_received",
-            //     fieldtype: "Currency",
-            //     width: 120
-            // }
-        // ];
-    
+        
     },
+
+    refresh: function (listview) {
+        // Set width for each list row column
+        document.querySelectorAll('.list-row-col').forEach(function (col) {
+            col.style.minWidth = '120px';
+            col.style.maxWidth = '120px';
+        });
+
+        // Set width for the subject column
+        document.querySelectorAll('.list-subject').forEach(function (col) {
+            col.style.minWidth = '200px';
+            col.style.maxWidth = '200px';
+        });
+
+        document.querySelectorAll('.list-subject').forEach(function (col) {
+            col.style.minWidth = '300px';
+            col.style.maxWidth = '300px';
+        });
+
+        let main_container = document.querySelector('.frappe-list');
+        if (main_container) {
+            main_container.style.overflowX = 'auto';
+        }
+        document.querySelectorAll('.list-row-head, .list-row-container').forEach(function(col) {
+            col.style.width = 'max-content';
+        });
+        document.querySelectorAll('.list-row .level-right').forEach(function(col) {
+            col.style.flex = 'max-content';
+        }); 
+    }
 
 };
