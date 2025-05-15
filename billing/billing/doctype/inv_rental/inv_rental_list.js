@@ -39,19 +39,19 @@ frappe.listview_settings['Inv_rental'] = {
             listview.export_report();
         })
     }
-        listview.columns = [
-            {
-                label: __("Invoice Number"),
-                fieldname: "name",
-                fieldtype: "Data",
-                width: 250  // Increase width here (default ~180)
-            },
-            {
-                label: __("Invoice Date"),
-                fieldname: "invoice_date",
-                fieldtype: "Date",
-                width: 120
-            },
+        // listview.columns = [
+        //     {
+        //         label: __("Invoice Number"),
+        //         fieldname: "name",
+        //         fieldtype: "Data",
+        //         width: 250  // Increase width here (default ~180)
+        //     },
+        //     {
+        //         label: __("Invoice Date"),
+        //         fieldname: "invoice_date",
+        //         fieldtype: "Date",
+        //         width: 120
+        //     },
             // {
             //     label: __("Property"),
             //     fieldname: "property",
@@ -82,7 +82,7 @@ frappe.listview_settings['Inv_rental'] = {
             //     fieldtype: "Currency",
             //     width: 120
             // }
-        ];
+        // ];
     
     },
 
