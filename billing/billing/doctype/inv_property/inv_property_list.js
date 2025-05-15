@@ -1,10 +1,10 @@
 frappe.listview_settings['inv_property'] = {
     hide_name_column: true,
 
-    onload: function(listview) {
-
+    onload: function (listview) {
         const is_admin = frappe.user.has_role('Administrator');
 
+        // Add your Custom action (visible to everyone)
         listview.page.add_actions_menu_item(__('Custom'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -27,49 +27,29 @@ frappe.listview_settings['inv_property'] = {
         });
 
         if (!is_admin) {
-            // Hide specific UI elements for non-admins
-            $('div.menu-btn-group').hide();
             listview.page.sidebar.toggle(false);
 
-            setTimeout(function () {
-                $('.custom-btn-group').hide();
-            }, 0);
+            // Delay to ensure dynamic actions are rendered
+            setTimeout(() => {
+                const itemsToHide = [
+                    'Edit',
+                    'Assign To',
+                    'Clear Assignment',
+                    'Apply Assignment Rule',
+                    'Add Tags',
+                    'Print',
+                    'Delete'
+                ];
 
-            // Clear all default action items
-            listview.page.clear_actions_menu();
-
-            // Re-add only Export and Custom for non-admins
-            listview.page.add_actions_menu_item(__('Export'), function () {
-                listview.export_report();
-            });
-
-            listview.page.add_actions_menu_item(__('Custom'), function () {
-                const selected = listview.get_checked_items();
-                if (!selected.length) {
-                    frappe.msgprint('Please select at least one record.');
-                    return;
-                }
-
-                frappe.call({
-                    method: 'billing.billing.doctype.inv_property.inv_property.new_trig',
-                    args: {
-                        names: selected.map(row => row.name)
-                    },
-                    callback: function (r) {
-                        if (!r.exc) {
-                            frappe.msgprint(__('Marked as reviewed'));
-                            listview.refresh();
-                        }
+                $('.dropdown-menu .dropdown-item').each(function () {
+                    const label = $(this).text().trim();
+                    if (itemsToHide.includes(label)) {
+                        $(this).hide();
                     }
                 });
-            });
+
+            }, 1000); // Increased delay to ensure all menu items are loaded
         }
 
-        // Optional: Adjust column width
-        setTimeout(() => {
-            const columnTitle = 'Property Name';
-            $('th:contains("' + columnTitle + '")').css('width', '50px');
-            $('td[data-fieldname="property_name"]').css('width', '50px');
-        }, 500);
     }
 };
