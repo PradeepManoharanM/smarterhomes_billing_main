@@ -4,7 +4,9 @@ frappe.listview_settings['Inv_rental'] = {
     
     
     onload: function(listview) {
-        listview.page.fields_dict['name'].$wrapper.find('label').text('Invoice Number');
+        $(".list-row-col span:contains('ID')").each(function() {
+            $(this).text("Invoice Number");
+        });
         // frappe.route_options = {};
         // listview.filter_area.clear();
         // listview.refresh();
