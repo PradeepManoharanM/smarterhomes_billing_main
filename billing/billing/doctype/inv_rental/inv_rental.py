@@ -1,15 +1,9 @@
 # Copyright (c) 2025, Frugal Scientific and contributors
 # For license information, please see license.txt
 
-import frappe
+# import frappe
 from frappe.model.document import Document
 
 
-class rentalcustomers(Document):
+class Inv_rental(Document):
 	pass
-
-
-@frappe.whitelist()
-def new_trig(names):
-    
-    return "Done"
