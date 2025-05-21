@@ -82,13 +82,8 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [
-  {
-   "link_doctype": "inv_meter_batch",
-   "link_fieldname": "property_name"
-  }
- ],
- "modified": "2025-05-14 15:38:18.574221",
+ "links": [],
+ "modified": "2025-05-21 18:30:21.232102",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "inv_property",

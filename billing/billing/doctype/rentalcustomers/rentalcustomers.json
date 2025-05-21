@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:property_name",
- "creation": "2025-05-21 17:57:53.943950",
+ "creation": "2025-05-21 18:31:47.732771",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -83,7 +83,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-21 17:57:53.943950",
+ "modified": "2025-05-21 18:31:47.732771",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalCustomers",
