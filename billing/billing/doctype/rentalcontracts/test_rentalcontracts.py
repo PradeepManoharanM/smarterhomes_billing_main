@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class Testinv_property(FrappeTestCase):
+class Testrentalcontracts(FrappeTestCase):
 	pass

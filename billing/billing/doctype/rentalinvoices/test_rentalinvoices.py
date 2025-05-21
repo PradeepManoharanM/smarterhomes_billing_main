@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class Testinv_meter_batch(FrappeTestCase):
+class TestRentalInvoices(FrappeTestCase):
 	pass

@@ -1,4 +1,4 @@
-frappe.listview_settings['inv_property'] = {
+frappe.listview_settings['RentalCustomers'] = {
     hide_name_column: true,
 
     onload: function (listview) {
@@ -13,7 +13,7 @@ frappe.listview_settings['inv_property'] = {
             }
 
             frappe.call({
-                method: 'billing.billing.doctype.inv_property.inv_property.new_trig',
+                method: 'billing.billing.doctype.RentalCustomers.RentalCustomers.new_trig',
                 args: {
                     names: selected.map(row => row.name)
                 },

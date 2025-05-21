@@ -82,16 +82,11 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [
-  {
-   "link_doctype": "inv_meter_batch",
-   "link_fieldname": "property_name"
-  }
- ],
- "modified": "2025-05-14 15:38:18.574221",
+ "links": [],
+ "modified": "2025-05-21 17:21:29.554917",
  "modified_by": "Administrator",
  "module": "Billing",
- "name": "inv_property",
+ "name": "RentalCustomers",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

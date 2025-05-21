@@ -58,13 +58,13 @@
    "fieldname": "contract_property",
    "fieldtype": "Link",
    "label": "Select Property",
-   "options": "inv_property"
+   "options": "RentalCustomers"
   },
   {
    "fieldname": "inv_property",
    "fieldtype": "Link",
    "label": "Select Property",
-   "options": "inv_property"
+   "options": "RentalCustomers"
   },
   {
    "fieldname": "spacer",
@@ -94,7 +94,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-03 09:52:56.679848",
+ "modified": "2025-05-21 17:22:34.870386",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "invoicePage",

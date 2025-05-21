@@ -1,4 +1,4 @@
-frappe.listview_settings['inv_meter_batch'] = {
+frappe.listview_settings['RentalContracts'] = {
     hide_name_column: true,
     
     
