@@ -1,16 +1,13 @@
-// Copyright (c) 2024, Frugal Scientific Pvt.Ltd and contributors
+// Copyright (c) 2025, Frugal Scientific and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('inv_property', {
-    
-    refresh: function (frm) {
+frappe.ui.form.on("RentalContracts", {
+refresh: function (frm) {
         $('.form-sidebar').hide();
         $('.prev-doc').hide();
         $('.next-doc').hide();
-        
         // frm.fields_dict['property_name'].$wrapper.show();
         if (!frappe.user.has_role('Administrator')) {
-            
             $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
             // let gatewayButton = $('button[data-doctype="Gateway"]');
             // if (gatewayButton.length) {

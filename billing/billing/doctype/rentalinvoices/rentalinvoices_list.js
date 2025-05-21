@@ -1,4 +1,4 @@
-frappe.listview_settings['Inv_rental'] = {
+frappe.listview_settings['RentalInvoices'] = {
     // hide_name_column: true,
     // listview.page.fields_dict['name'].$wrapper.find('label').text('Invoice Number');
     
@@ -30,7 +30,7 @@ frappe.listview_settings['Inv_rental'] = {
                 
                 $('.custom-btn-group').hide();
                  let labelEl = document.querySelector('.list-view-form .title-text');
-                if (labelEl && labelEl.innerText === 'Inv_rental') {
+                if (labelEl && labelEl.innerText === 'RentalInvoices') {
                 labelEl.innerText = 'Rental Invoice';
                 clearInterval(interval);
                 }

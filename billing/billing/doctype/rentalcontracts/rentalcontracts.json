@@ -24,7 +24,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Property",
-   "options": "inv_property",
+   "options": "RentalCustomers",
    "reqd": 1
   },
   {
@@ -96,10 +96,10 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-14 15:40:31.692994",
+ "modified": "2025-05-21 11:38:47.686721",
  "modified_by": "Administrator",
  "module": "Billing",
- "name": "inv_meter_batch",
+ "name": "RentalContracts",
  "naming_rule": "Autoincrement",
  "owner": "Administrator",
  "permissions": [

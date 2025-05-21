@@ -1,7 +1,7 @@
 // Copyright (c) 2025, Frugal Scientific and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Inv_rental", {
+frappe.ui.form.on("RentalInvoices", {
     refresh: function (frm) {
             $('.form-sidebar').hide();
             $('.prev-doc').hide();

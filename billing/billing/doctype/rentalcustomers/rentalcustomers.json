@@ -91,7 +91,7 @@
  "modified": "2025-05-14 15:38:18.574221",
  "modified_by": "Administrator",
  "module": "Billing",
- "name": "inv_property",
+ "name": "RentalCustomers",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

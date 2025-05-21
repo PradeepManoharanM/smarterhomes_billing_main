@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class Inv_rental(Document):
+class rentalcontracts(Document):
 	pass
