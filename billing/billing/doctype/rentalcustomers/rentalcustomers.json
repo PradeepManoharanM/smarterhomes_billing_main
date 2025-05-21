@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:property_name",
- "creation": "2025-04-05 10:29:59.913874",
+ "creation": "2025-05-21 12:39:16.845398",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -88,7 +88,7 @@
    "link_fieldname": "property_name"
   }
  ],
- "modified": "2025-05-14 15:38:18.574221",
+ "modified": "2025-05-21 12:39:16.845398",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalCustomers",
