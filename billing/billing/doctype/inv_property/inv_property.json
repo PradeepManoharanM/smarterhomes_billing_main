@@ -2,7 +2,7 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "field:property_name",
- "creation": "2025-05-21 17:57:53.943950",
+ "creation": "2025-04-05 10:29:59.913874",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -82,11 +82,16 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2025-05-21 17:57:53.943950",
+ "links": [
+  {
+   "link_doctype": "inv_meter_batch",
+   "link_fieldname": "property_name"
+  }
+ ],
+ "modified": "2025-05-14 15:38:18.574221",
  "modified_by": "Administrator",
  "module": "Billing",
- "name": "RentalCustomers",
+ "name": "inv_property",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
