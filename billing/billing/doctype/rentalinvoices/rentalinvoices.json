@@ -1,7 +1,7 @@
 {
  "actions": [],
  "autoname": "field:inv_number",
- "creation": "2025-05-21 17:10:57.579137",
+ "creation": "2025-05-21 18:15:56.877279",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
@@ -45,7 +45,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Property",
-   "options": "RentalCustomers",
+   "options": "inv_property",
    "read_only": 1
   },
   {
@@ -193,7 +193,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-21 17:22:37.740850",
+ "modified": "2025-05-21 18:15:56.877279",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalInvoices",
