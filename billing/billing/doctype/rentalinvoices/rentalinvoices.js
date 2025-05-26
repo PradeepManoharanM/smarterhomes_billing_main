@@ -10,7 +10,7 @@ frappe.ui.form.on("RentalInvoices", {
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
               
-                frm.disable_save();
+                // frm.disable_save();
                 setTimeout(() => {
                         
                     frm.page.menu.find('.dropdown-item:contains("Jump to field")').hide();
