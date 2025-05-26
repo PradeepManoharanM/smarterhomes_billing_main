@@ -6,7 +6,7 @@ frappe.ui.form.on("RentalInvoices", {
             $('.form-sidebar').hide();
             $('.prev-doc').hide();
             $('.next-doc').hide();
-            frm.disable_save();
+            // frm.disable_save();
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
               
