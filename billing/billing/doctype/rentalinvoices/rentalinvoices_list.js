@@ -1,6 +1,6 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
-        // ✅ Month dropdown without year
+        // ✅ Month dropdown (without year prefix)
         const monthOptions = ['', '01', '02', '03', '04', '05', '06',
                               '07', '08', '09', '10', '11', '12'];
 
@@ -13,7 +13,7 @@ frappe.listview_settings['RentalInvoices'] = {
         monthSelect.on('change', function () {
             const selectedMonth = $(this).val();
             if (selectedMonth) {
-                const year = frappe.datetime.get_today().split('-')[0]; // current year
+                const year = frappe.datetime.get_today().split('-')[0]; // Use current year
                 const start = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(selectedMonth) - 1, 1));
                 const end = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(selectedMonth), 0));
 
@@ -27,31 +27,28 @@ frappe.listview_settings['RentalInvoices'] = {
     },
 
     refresh(listview) {
-        // ✅ Export button only for Administrator
-        if (frappe.user.has_role('Administrator')) {
-            listview.page.add_actions_menu_item(__('Export'), function () {
-                const filters = listview.get_filters_for_args();
-
-                frappe.call({
-                    method: "frappe.desk.reportview.export_query",
-                    args: {
-                        doctype: listview.doctype,
-                        file_format_type: "Excel",
-                        filters: filters,
-                        file_name: listview.doctype + "_Export"
-                    },
-                    callback: function (r) {
-                        if (!r.exc && r.message && r.message.file_url) {
-                            window.open(r.message.file_url);
-                        } else {
-                            frappe.msgprint(__('Export failed.'));
-                        }
+        // ✅ Export button visible to all
+        listview.page.add_actions_menu_item(__('Export'), function () {
+            const filters = listview.get_filters_for_args();
+            frappe.call({
+                method: "frappe.desk.reportview.export_query",
+                args: {
+                    doctype: listview.doctype,
+                    file_format_type: "Excel",
+                    filters: filters,
+                    file_name: listview.doctype + "_Export"
+                },
+                callback: function (r) {
+                    if (!r.exc && r.message && r.message.file_url) {
+                        window.open(r.message.file_url);
+                    } else {
+                        frappe.msgprint(__('Export failed.'));
                     }
-                });
+                }
             });
-        }
+        });
 
-        // ✅ Approve button for all (or restrict if needed)
+        // ✅ Approve button visible to all
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -73,7 +70,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // 🛑 Hide elements for non-admins AFTER everything is rendered
+        // 🛑 Hide sidebar and "New" button for non-admin users
         if (!frappe.user.has_role('Administrator')) {
             setTimeout(() => {
                 // Hide sidebar
@@ -82,13 +79,8 @@ frappe.listview_settings['RentalInvoices'] = {
                 }
 
                 // Hide "New" button
-                $('.btn-primary').filter(function () {
-                    return $(this).text().trim() === 'New';
-                }).hide();
-
-                // Clear actions menu (removes Export/Approve for non-admins)
-                listview.page.clear_actions_menu();
-            }, 500);
+                listview.page.btn_primary?.hide();
+            }, 300);
         }
     }
 };
