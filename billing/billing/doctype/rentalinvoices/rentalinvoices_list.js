@@ -1,46 +1,56 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload: function (listview) {
-        // Rename ID column to "Invoice Number"
+        // Rename ID to Invoice Number
         $(".list-row-col span:contains('ID')").each(function () {
             $(this).text("Invoice Number");
         });
 
-        // ✅ Export action for all users
-        listview.page.add_actions_menu_item(__('Export'), function () {
-            listview.export_report();
-        });
+        // Add Export button (for all users)
+        const export_action = {
+            label: __('Export'),
+            action: () => listview.export_report()
+        };
 
-        // ✅ Approve action
-        listview.page.add_actions_menu_item(__('Approve'), function () {
-            const selected = listview.get_checked_items();
-            if (!selected.length) {
-                frappe.msgprint("Please select at least one row to approve.");
-                return;
-            }
+        // Add Approve button
+        const approve_action = {
+            label: __('Approve'),
+            action: () => {
+                const selected = listview.get_checked_items();
+                if (!selected.length) {
+                    frappe.msgprint("Please select at least one row to approve.");
+                    return;
+                }
 
-            selected.forEach(row => {
-                frappe.call({
-                    method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
-                    args: { docname: row.name },
-                    callback: function (r) {
-                        if (!r.exc) {
-                            frappe.msgprint(`Approved: ${row.name}`);
-                            listview.refresh();
+                selected.forEach(row => {
+                    frappe.call({
+                        method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
+                        args: { docname: row.name },
+                        callback: function (r) {
+                            if (!r.exc) {
+                                frappe.msgprint(`Approved: ${row.name}`);
+                                listview.refresh();
+                            }
                         }
-                    }
+                    });
                 });
-            });
-        });
+            }
+        };
 
-        // ✅ Hide UI for non-admins, but DO NOT clear the actions menu!
+        // First, clear all default action items
+        listview.page.clear_actions_menu();
+
+        // Now only add our two buttons
+        listview.page.add_actions_menu_item(approve_action.label, approve_action.action);
+        listview.page.add_actions_menu_item(export_action.label, export_action.action);
+
+        // Hide UI elements for non-admins (optional)
         if (!frappe.user.has_role('Administrator')) {
-            $('div.menu-btn-group').hide();
-            listview.page.sidebar.toggle(false);
-            setTimeout(() => $('.custom-btn-group').hide(), 0);
-            // ❌ Do NOT use listview.page.clear_actions_menu();
+            $('div.menu-btn-group').hide();                      // top-right buttons
+            listview.page.sidebar.toggle(false);                 // sidebar
+            setTimeout(() => $('.custom-btn-group').hide(), 0);  // row-level buttons
         }
 
-        // ✅ Convert selected date to full month filter
+        // 📅 Handle single date -> full month logic
         const invoiceDateFilter = listview.page.fields_dict['invoice_date'];
         if (invoiceDateFilter) {
             invoiceDateFilter.$wrapper.find('input').on('change', function () {
@@ -50,17 +60,20 @@ frappe.listview_settings['RentalInvoices'] = {
                     const monthStart = frappe.datetime.month_start(date);
                     const monthEnd = frappe.datetime.month_end(date);
 
-                    // Clear old filter and add monthly range
-                    listview.filter_area.remove('invoice_date');
-                    listview.filter_area.add('RentalInvoices', 'invoice_date', 'between', [monthStart, monthEnd]);
-                    listview.run();
+                    // Set new filter to whole month
+                    frappe.route_options = {
+                        invoice_date: ["between", [monthStart, monthEnd]]
+                    };
+
+                    // Reload same list to apply new filters
+                    frappe.set_route("List", "RentalInvoices");
                 }
             });
         }
     },
 
     refresh: function (listview) {
-        // Style tweaks
+        // Optional styling tweaks
         document.querySelectorAll('.list-row-col').forEach(col => {
             col.style.minWidth = '120px';
             col.style.maxWidth = '120px';
