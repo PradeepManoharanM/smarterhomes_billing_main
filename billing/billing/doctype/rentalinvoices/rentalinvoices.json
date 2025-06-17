@@ -16,6 +16,7 @@
   "prev_balance",
   "sgst",
   "cgst",
+  "id",
   "section_break_qetg",
   "discount",
   "late_fee",
@@ -171,8 +172,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Amount Received",
-   "precision": "2",
-   "read_only": 1
+   "precision": "2"
   },
   {
    "fieldname": "total_due",
@@ -187,13 +187,19 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "TDS",
-   "precision": "2",
-   "read_only": 1
+   "precision": "2"
+  },
+  {
+   "fieldname": "id",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "ID"
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-22 11:41:09.408237",
+ "modified": "2025-06-17 12:31:29.641949",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalInvoices",
