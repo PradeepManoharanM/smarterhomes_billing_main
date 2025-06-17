@@ -1,20 +1,18 @@
 frappe.listview_settings['RentalInvoices'] = {
-    onload(listview) {
-        // Wait for list to load completely
+    onload: function (listview) {
+        // Ensure actions menu has only Export and Approve
         setTimeout(() => {
-            // ✅ Clear existing actions
             listview.page.clear_actions_menu();
 
-            // ✅ Add Export Button (works for all)
-            listview.page.add_actions_menu_item(__('Export'), () => {
-                // Force export for visible records
+            // ✅ Export (works for users)
+            listview.page.add_actions_menu_item(__('Export'), function () {
                 frappe.query_reports['RentalInvoices']?.execute
                     ? frappe.query_reports['RentalInvoices'].execute()
-                    : listview.export_report();
+                    : listview.export_report && listview.export_report();
             });
 
-            // ✅ Add Approve Button
-            listview.page.add_actions_menu_item(__('Approve'), () => {
+            // ✅ Approve
+            listview.page.add_actions_menu_item(__('Approve'), function () {
                 const selected = listview.get_checked_items();
                 if (!selected.length) {
                     frappe.msgprint("Please select at least one row to approve.");
@@ -34,32 +32,29 @@ frappe.listview_settings['RentalInvoices'] = {
                     });
                 });
             });
-        }, 100); // short delay ensures elements load first
+        }, 200);
 
-        // ✅ Date filter: convert single date to month filter
-        const invDateFilter = listview.page.fields_dict['inv_date'];
-        if (invDateFilter) {
-            invDateFilter.$wrapper.find('input').off('change').on('change', function () {
-                const selectedDate = invDateFilter.get_value();
+        // ✅ Fix filter for inv_date to convert to full month
+        const dateField = listview.page.fields_dict['inv_date'];
+        if (dateField) {
+            dateField.$wrapper.find('input').off('change').on('change', function () {
+                const selectedDate = dateField.get_value();
                 if (selectedDate) {
                     const date = frappe.datetime.str_to_obj(selectedDate);
                     const monthStart = frappe.datetime.month_start(date);
                     const monthEnd = frappe.datetime.month_end(date);
 
-                    // Set route options for monthly filter
                     frappe.route_options = {
                         inv_date: ["between", [monthStart, monthEnd]]
                     };
-
-                    // Trigger reload to apply the filter
                     frappe.set_route("List", "RentalInvoices");
                 }
             });
         }
     },
 
-    refresh(listview) {
-        // Optional styling
+    refresh: function (listview) {
+        // Optional list styling
         document.querySelectorAll('.list-row-col').forEach(col => {
             col.style.minWidth = '120px';
             col.style.maxWidth = '120px';
