@@ -72,9 +72,13 @@ frappe.listview_settings['RentalInvoices'] = {
 
         // 🛑 Hide sidebar and "New" button for non-admin users
         if (!frappe.user.has_role('Administrator')) {
+
+            listview.page.sidebar.toggle(false);
+            $('.custom-btn-group').hide();
+
             setTimeout(() => {
                 // Hide sidebar
-                listview.page.sidebar.toggle(false);
+                
                 const itemsToHide = [
                     'Edit',
                     'Assign To',
@@ -93,7 +97,7 @@ frappe.listview_settings['RentalInvoices'] = {
                 });
 
                 // Hide "New" button
-                listview.page.btn_primary?.hide();
+                // listview.page.btn_primary?.hide();
             }, 300);
         }
     }
