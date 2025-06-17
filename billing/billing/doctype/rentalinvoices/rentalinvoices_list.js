@@ -27,26 +27,26 @@ frappe.listview_settings['RentalInvoices'] = {
         });
 
         // ✅ Approve selected rows
-        listview.page.add_actions_menu_item(__('Approve'), function () {
-            const selected = listview.get_checked_items();
-            if (!selected.length) {
-                frappe.msgprint("Please select at least one row to approve.");
-                return;
-            }
+        listview.page.add_actions_menu_item(__('Export'), function () {
+    const filters = listview.get_filters_for_args();
 
-            selected.forEach(row => {
-                frappe.call({
-                    method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
-                    args: { docname: row.name },
-                    callback: function (r) {
-                        if (!r.exc) {
-                            frappe.msgprint(`Approved: ${row.name}`);
-                            listview.refresh();
-                        }
-                    }
-                });
-            });
-        });
+    frappe.call({
+        method: "frappe.desk.reportview.export_query",
+        args: {
+            doctype: listview.doctype,
+            file_format_type: "Excel", // ✅ Frappe v15+ expects this key
+            filters: filters,
+        },
+        callback: function (r) {
+            if (!r.exc && r.message && r.message.file_url) {
+                window.location.href = r.message.file_url;
+            } else {
+                frappe.msgprint(__('Unable to export file.'));
+            }
+        }
+    });
+});
+
 
         // ✅ Hide sidebar & New button for non-admin users
         if (!frappe.user.has_role('Administrator')) {
