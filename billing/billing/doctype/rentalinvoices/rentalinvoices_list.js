@@ -1,6 +1,6 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
-        // ✅ Month dropdown (without year prefix)
+        // ✅ Month dropdown (without year)
         const monthOptions = ['', '01', '02', '03', '04', '05', '06',
                               '07', '08', '09', '10', '11', '12'];
 
@@ -27,7 +27,7 @@ frappe.listview_settings['RentalInvoices'] = {
     },
 
     refresh(listview) {
-        // ✅ Export button visible to all
+        // ✅ Export button (all users)
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -48,7 +48,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // ✅ Approve button visible to all
+        // ✅ Approve button (all users)
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -70,16 +70,26 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // 🛑 Hide sidebar and "New" button for non-admin users
+        // 🛑 Hide elements for non-admin users
         if (!frappe.user.has_role('Administrator')) {
             setTimeout(() => {
-                // Hide sidebar
+                // Hide Sidebar
                 if (listview.page.sidebar) {
                     listview.page.sidebar.hide();
                 }
 
                 // Hide "New" button
                 listview.page.btn_primary?.hide();
+
+                // Hide "List View dropdown" (☰ icon)
+                $('.dropdown-toggle').each(function () {
+                    if ($(this).text().trim() === 'List') {
+                        $(this).hide();
+                    }
+                });
+
+                // Optional: Hide other dropdowns by class if needed
+                $('.dropdown-menu').hide();
             }, 300);
         }
     }
