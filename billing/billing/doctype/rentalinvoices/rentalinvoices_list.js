@@ -1,6 +1,6 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
-        // ✅ Month dropdown (without year)
+        // ✅ Month dropdown (without year prefix)
         const monthOptions = ['', '01', '02', '03', '04', '05', '06',
                               '07', '08', '09', '10', '11', '12'];
 
@@ -27,7 +27,7 @@ frappe.listview_settings['RentalInvoices'] = {
     },
 
     refresh(listview) {
-        // ✅ Export button (all users)
+        // ✅ Export button visible to all
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -48,7 +48,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // ✅ Approve button (all users)
+        // ✅ Approve button visible to all
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -70,26 +70,30 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // 🛑 Hide elements for non-admin users
+        // 🛑 Hide sidebar and "New" button for non-admin users
         if (!frappe.user.has_role('Administrator')) {
             setTimeout(() => {
-                // Hide Sidebar
-                if (listview.page.sidebar) {
-                    listview.page.sidebar.hide();
-                }
+                // Hide sidebar
+                listview.page.sidebar.toggle(false);
+                const itemsToHide = [
+                    'Edit',
+                    'Assign To',
+                    'Clear Assignment',
+                    'Apply Assignment Rule',
+                    'Add Tags',
+                    'Print',
+                    'Delete'
+                ];
 
-                // Hide "New" button
-                listview.page.btn_primary?.hide();
-
-                // Hide "List View dropdown" (☰ icon)
-                $('.dropdown-toggle').each(function () {
-                    if ($(this).text().trim() === 'List') {
+                $('.dropdown-menu .dropdown-item').each(function () {
+                    const label = $(this).text().trim();
+                    if (itemsToHide.includes(label)) {
                         $(this).hide();
                     }
                 });
 
-                // Optional: Hide other dropdowns by class if needed
-                $('.dropdown-menu').hide();
+                // Hide "New" button
+                listview.page.btn_primary?.hide();
             }, 300);
         }
     }
