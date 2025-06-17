@@ -1,6 +1,6 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
-        // ✅ Month options without year prefix
+        // ✅ Month dropdown without year
         const monthOptions = ['', '01', '02', '03', '04', '05', '06',
                               '07', '08', '09', '10', '11', '12'];
 
@@ -24,15 +24,6 @@ frappe.listview_settings['RentalInvoices'] = {
                 listview.run();
             }
         });
-
-        // 🛑 Hide sidebar and New button for non-admin users
-        if (!frappe.user.has_role('Administrator')) {
-            listview.page.sidebar.toggle(false);
-            setTimeout(() => {
-                $('.btn[data-label="New"]').hide();
-            }, 100);
-            listview.page.clear_actions_menu();
-        }
     },
 
     refresh(listview) {
@@ -60,7 +51,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         }
 
-        // ✅ Approve button
+        // ✅ Approve button for all (or restrict if needed)
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -81,5 +72,23 @@ frappe.listview_settings['RentalInvoices'] = {
                 });
             });
         });
+
+        // 🛑 Hide elements for non-admins AFTER everything is rendered
+        if (!frappe.user.has_role('Administrator')) {
+            setTimeout(() => {
+                // Hide sidebar
+                if (listview.page.sidebar) {
+                    listview.page.sidebar.hide();
+                }
+
+                // Hide "New" button
+                $('.btn-primary').filter(function () {
+                    return $(this).text().trim() === 'New';
+                }).hide();
+
+                // Clear actions menu (removes Export/Approve for non-admins)
+                listview.page.clear_actions_menu();
+            }, 500);
+        }
     }
 };
