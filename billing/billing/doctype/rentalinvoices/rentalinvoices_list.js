@@ -1,61 +1,86 @@
 frappe.listview_settings['RentalInvoices'] = {
-    // hide_name_column: true,
-    // listview.page.fields_dict['name'].$wrapper.find('label').text('Invoice Number');
-    
-    
-    onload: function(listview) {
-        $(".list-row-col span:contains('ID')").each(function() {
+    onload: function (listview) {
+        // Rename ID to Invoice Number
+        $(".list-row-col span:contains('ID')").each(function () {
             $(this).text("Invoice Number");
         });
-      
-        
+
+        // Hide UI elements for non-admin users
         if (!frappe.user.has_role('Administrator')) {
-        
             $('div.menu-btn-group').hide();
-           
             listview.page.sidebar.toggle(false);
-            setTimeout(function() {
-                
-                $('.custom-btn-group').hide();
-                
-            }, 0);
-            
+            setTimeout(() => $('.custom-btn-group').hide(), 0);
             listview.page.clear_actions_menu();
-            listview.page.add_actions_menu_item(__('Export'), function() {
+        }
+
+        // Export action for all
+        listview.page.add_actions_menu_item(__('Export'), function () {
             listview.export_report();
-        })
-    }
-        
+        });
+
+        // Approve action
+        listview.page.add_actions_menu_item(__('Approve'), function () {
+            const selected = listview.get_checked_items();
+            if (!selected.length) {
+                frappe.msgprint("Please select at least one row to approve.");
+                return;
+            }
+
+            selected.forEach(row => {
+                frappe.call({
+                    method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
+                    args: { docname: row.name },
+                    callback: function (r) {
+                        if (!r.exc) {
+                            frappe.msgprint(`Approved: ${row.name}`);
+                            listview.refresh();
+                        }
+                    }
+                });
+            });
+        });
+
+        // 🔁 Filter invoice_date by month if selected
+        const invoiceDateFilter = listview.page.fields_dict['invoice_date'];
+        if (invoiceDateFilter) {
+            invoiceDateFilter.$wrapper.find('input').on('change', function () {
+                const selectedDate = invoiceDateFilter.get_value();
+                if (selectedDate) {
+                    const date = frappe.datetime.str_to_obj(selectedDate);
+                    const monthStart = frappe.datetime.month_start(date);
+                    const monthEnd = frappe.datetime.month_end(date);
+
+                    // Replace current filter with monthly range
+                    frappe.route_options = {
+                        invoice_date: ["between", [monthStart, monthEnd]]
+                    };
+                    listview.refresh();
+                }
+            });
+        }
     },
 
     refresh: function (listview) {
-        // Set width for each list row column
-        document.querySelectorAll('.list-row-col').forEach(function (col) {
+        // Styling tweaks
+        document.querySelectorAll('.list-row-col').forEach(col => {
             col.style.minWidth = '120px';
             col.style.maxWidth = '120px';
         });
 
-        // Set width for the subject column
-        document.querySelectorAll('.list-subject').forEach(function (col) {
-            col.style.minWidth = '200px';
-            col.style.maxWidth = '200px';
-        });
-
-        document.querySelectorAll('.list-subject').forEach(function (col) {
+        document.querySelectorAll('.list-subject').forEach(col => {
             col.style.minWidth = '300px';
             col.style.maxWidth = '300px';
         });
 
-        let main_container = document.querySelector('.frappe-list');
-        if (main_container) {
-            main_container.style.overflowX = 'auto';
-        }
-        document.querySelectorAll('.list-row-head, .list-row-container').forEach(function(col) {
+        const main_container = document.querySelector('.frappe-list');
+        if (main_container) main_container.style.overflowX = 'auto';
+
+        document.querySelectorAll('.list-row-head, .list-row-container').forEach(col => {
             col.style.width = 'max-content';
         });
-        document.querySelectorAll('.list-row .level-right').forEach(function(col) {
-            col.style.flex = 'max-content';
-        }); 
-    }
 
+        document.querySelectorAll('.list-row .level-right').forEach(col => {
+            col.style.flex = 'max-content';
+        });
+    }
 };
