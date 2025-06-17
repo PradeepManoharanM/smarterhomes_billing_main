@@ -38,24 +38,27 @@ frappe.listview_settings['RentalInvoices'] = {
     refresh(listview) {
         // ✅ Export Button
         listview.page.add_actions_menu_item(__('Export'), function () {
-            const filters = listview.get_filters_for_args();
+        const filters = listview.get_filters_for_args();
 
-            frappe.call({
-                method: "frappe.desk.reportview.export_query",
-                args: {
-                    doctype: listview.doctype,
-                    file_format_type: "Excel",
-                    filters: filters,
-                },
-                callback: function (r) {
-                    if (!r.exc && r.message && r.message.file_url) {
-                        window.location.href = r.message.file_url;
-                    } else {
-                        frappe.msgprint(__('Export failed'));
-                    }
+        frappe.call({
+            method: "frappe.desk.reportview.export_query",
+            args: {
+                doctype: listview.doctype,
+                file_format_type: "Excel",  // or "CSV" if preferred
+                filters: filters,
+                file_name: listview.doctype + "_Export"
+            },
+            callback: function (r) {
+                if (!r.exc && r.message && r.message.file_url) {
+                    // ✅ Trigger the file download
+                    window.open(r.message.file_url);
+                } else {
+                    frappe.msgprint(__('Export failed.'));
                 }
-            });
+            }
         });
+    });
+
 
         // ✅ Approve Button
         listview.page.add_actions_menu_item(__('Approve'), function () {
