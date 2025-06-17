@@ -1,50 +1,44 @@
 frappe.listview_settings['RentalInvoices'] = {
-    onload: function (listview) {
-        // ✅ Add a month selector outside filters (won't go to backend)
-        listview.page.add_inner_button(__('Filter by Month'), function () {}, 'More'); // placeholder
+    onload(listview) {
+        // ✅ Add custom Month dropdown as plain HTML
+        const monthOptions = ['', '2025-01', '2025-02', '2025-03', '2025-04', '2025-05', '2025-06',
+                              '2025-07', '2025-08', '2025-09', '2025-10', '2025-11', '2025-12'];
 
-        const month_field = listview.page.add_field({
-            fieldtype: 'Select',
-            label: 'Select Month',
-            fieldname: 'inv_month_selector',
-            options: [
-                '',
-                '2025-01', '2025-02', '2025-03', '2025-04', '2025-05',
-                '2025-06', '2025-07', '2025-08', '2025-09',
-                '2025-10', '2025-11', '2025-12'
-            ],
-            change: function () {
-                const selected = month_field.get_value();
-                if (selected) {
-                    const [year, month] = selected.split('-');
-                    const start = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(month) - 1, 1));
-                    const end = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(month), 0));
+        const monthSelect = $(`<select class="form-control" style="width: 150px; margin-left: 10px;">
+            ${monthOptions.map(m => `<option value="${m}">${m ? m : 'Select Month'}</option>`).join('')}
+        </select>`);
 
-                    listview.filter_area.clear(); // Clear existing filters
-                    listview.filter_area.add([
-                        ['RentalInvoices', 'inv_date', 'between', [start, end]]
-                    ]);
-                    listview.run();
-                }
+        listview.page.$title_area.append(monthSelect);
+
+        monthSelect.on('change', function () {
+            const selected = $(this).val();
+            if (selected) {
+                const [year, month] = selected.split('-');
+                const start = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(month) - 1, 1));
+                const end = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(month), 0));
+
+                listview.filter_area.clear();
+                listview.filter_area.add([
+                    ['RentalInvoices', 'inv_date', 'between', [start, end]]
+                ]);
+                listview.run();
             }
         });
 
-        // 🛑 Hide UI for non-admin users
+        // 🛑 Hide sidebar and buttons for non-admin users
         if (!frappe.user.has_role('Administrator')) {
-            listview.page.sidebar.toggle(false); // hide sidebar
-
+            listview.page.sidebar.toggle(false);
             setTimeout(() => {
-                $('.btn[data-label="New"]').hide(); // hide new button
+                $('.btn[data-label="New"]').hide();
             }, 100);
-
             listview.page.clear_actions_menu();
         }
     },
 
-    refresh: function (listview) {
-        // ✅ Export Button - only valid filters passed
+    refresh(listview) {
+        // ✅ Export Button
         listview.page.add_actions_menu_item(__('Export'), function () {
-            let filters = listview.get_filters_for_args();
+            const filters = listview.get_filters_for_args();
 
             frappe.call({
                 method: "frappe.desk.reportview.export_query",
