@@ -5,16 +5,28 @@ frappe.listview_settings['RentalInvoices'] = {
             $(this).text("Invoice Number");
         });
 
-        // Clear existing actions and re-add Export + Approve
+        // Clear existing actions
         listview.page.clear_actions_menu();
 
-        // ✅ Working Export even for non-admins
+        // ✅ Export Action - works for non-admins
         listview.page.add_actions_menu_item(__('Export'), function () {
-            // This triggers the native export dialog
-            frappe.set_route("query-report", "RentalInvoices");
+            const filters = listview.get_filters_for_args();
+            frappe.call({
+                method: "frappe.desk.reportview.export_query",
+                args: {
+                    doctype: listview.doctype,
+                    file_type: "Excel", // or "CSV" if needed
+                    filters: filters,
+                },
+                callback: function (r) {
+                    if (!r.exc) {
+                        window.location.href = r.message.file_url;
+                    }
+                }
+            });
         });
 
-        // ✅ Approve selected
+        // ✅ Approve selected rows
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -36,29 +48,24 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Hide only sidebar + New button (not export!)
+        // ✅ Hide sidebar & New button for non-admin users
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             setTimeout(() => {
-                $('.btn[data-label="New"]').hide(); // Only hides 'New' button
+                $('.btn[data-label="New"]').hide();
             }, 0);
         }
 
-        // ✅ Correct monthly filter for inv_date
+        // ✅ inv_date filter for whole month
         const invDateFilter = listview.page.fields_dict['inv_date'];
         if (invDateFilter) {
             invDateFilter.$wrapper.find('input').on('change', function () {
                 const selectedDate = invDateFilter.get_value();
-
                 if (selectedDate) {
-                    const dateObj = frappe.datetime.str_to_obj(selectedDate);
+                    const dateObj = new Date(selectedDate); // ✅ safer than frappe.datetime.str_to_obj
                     const monthStart = frappe.datetime.month_start(dateObj);
                     const monthEnd = frappe.datetime.month_end(dateObj);
 
-                    // Debug log (optional):
-                    console.log("Filtering inv_date between:", monthStart, "and", monthEnd);
-
-                    // Apply date range filter directly
                     listview.filter_area.clear();
                     listview.filter_area.add([
                         [listview.doctype, 'inv_date', 'between', [monthStart, monthEnd]]
@@ -70,7 +77,7 @@ frappe.listview_settings['RentalInvoices'] = {
     },
 
     refresh: function (listview) {
-        // Style tweaks
+        // UI styling tweaks
         document.querySelectorAll('.list-row-col').forEach(col => {
             col.style.minWidth = '120px';
             col.style.maxWidth = '120px';
