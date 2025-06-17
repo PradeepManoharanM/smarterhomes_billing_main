@@ -1,19 +1,11 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload: function (listview) {
-        // Rename ID to Invoice Number
+        // Rename "ID" column to "Invoice Number"
         $(".list-row-col span:contains('ID')").each(function () {
             $(this).text("Invoice Number");
         });
 
-        // Hide UI elements for non-admin users
-        if (!frappe.user.has_role('Administrator')) {
-            $('div.menu-btn-group').hide();
-            listview.page.sidebar.toggle(false);
-            setTimeout(() => $('.custom-btn-group').hide(), 0);
-            listview.page.clear_actions_menu();
-        }
-
-        // Export action for all
+        // Export action (for all users)
         listview.page.add_actions_menu_item(__('Export'), function () {
             listview.export_report();
         });
@@ -40,7 +32,15 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // 🔁 Filter invoice_date by month if selected
+        // Hide UI elements for non-admin users
+        if (!frappe.user.has_role('Administrator')) {
+            $('div.menu-btn-group').hide();
+            listview.page.sidebar.toggle(false);
+            setTimeout(() => $('.custom-btn-group').hide(), 0);
+            listview.page.clear_actions_menu();
+        }
+
+        // 🔁 Convert selected date into full month range
         const invoiceDateFilter = listview.page.fields_dict['invoice_date'];
         if (invoiceDateFilter) {
             invoiceDateFilter.$wrapper.find('input').on('change', function () {
@@ -50,11 +50,10 @@ frappe.listview_settings['RentalInvoices'] = {
                     const monthStart = frappe.datetime.month_start(date);
                     const monthEnd = frappe.datetime.month_end(date);
 
-                    // Replace current filter with monthly range
-                    frappe.route_options = {
-                        invoice_date: ["between", [monthStart, monthEnd]]
-                    };
-                    listview.refresh();
+                    // Clear old filters and apply full month range
+                    listview.filter_area.remove('invoice_date');
+                    listview.filter_area.add('RentalInvoices', 'invoice_date', 'between', [monthStart, monthEnd]);
+                    listview.run();
                 }
             });
         }
