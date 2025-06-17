@@ -1,16 +1,16 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload: function (listview) {
-        // Rename "ID" column to "Invoice Number"
+        // Rename ID column to "Invoice Number"
         $(".list-row-col span:contains('ID')").each(function () {
             $(this).text("Invoice Number");
         });
 
-        // Export action (for all users)
+        // ✅ Export action for all users
         listview.page.add_actions_menu_item(__('Export'), function () {
             listview.export_report();
         });
 
-        // Approve action
+        // ✅ Approve action
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -32,15 +32,15 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Hide UI elements for non-admin users
+        // ✅ Hide UI for non-admins, but DO NOT clear the actions menu!
         if (!frappe.user.has_role('Administrator')) {
             $('div.menu-btn-group').hide();
             listview.page.sidebar.toggle(false);
             setTimeout(() => $('.custom-btn-group').hide(), 0);
-            listview.page.clear_actions_menu();
+            // ❌ Do NOT use listview.page.clear_actions_menu();
         }
 
-        // 🔁 Convert selected date into full month range
+        // ✅ Convert selected date to full month filter
         const invoiceDateFilter = listview.page.fields_dict['invoice_date'];
         if (invoiceDateFilter) {
             invoiceDateFilter.$wrapper.find('input').on('change', function () {
@@ -50,7 +50,7 @@ frappe.listview_settings['RentalInvoices'] = {
                     const monthStart = frappe.datetime.month_start(date);
                     const monthEnd = frappe.datetime.month_end(date);
 
-                    // Clear old filters and apply full month range
+                    // Clear old filter and add monthly range
                     listview.filter_area.remove('invoice_date');
                     listview.filter_area.add('RentalInvoices', 'invoice_date', 'between', [monthStart, monthEnd]);
                     listview.run();
@@ -60,7 +60,7 @@ frappe.listview_settings['RentalInvoices'] = {
     },
 
     refresh: function (listview) {
-        // Styling tweaks
+        // Style tweaks
         document.querySelectorAll('.list-row-col').forEach(col => {
             col.style.minWidth = '120px';
             col.style.maxWidth = '120px';
