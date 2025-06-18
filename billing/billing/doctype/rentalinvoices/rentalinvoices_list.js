@@ -3,66 +3,65 @@ frappe.listview_settings['RentalInvoices'] = {
         const currentYear = new Date().getFullYear();
         const currentMonth = new Date().getMonth() + 1;
 
-        // Prevent duplicate rendering
-        if ($('#custom-year-month-filter').length > 0) return;
+        // Avoid duplicates
+        if ($('#year-month-filter').length) return;
 
-        // Create and append dropdown container
-        const $container = $(`
-            <div id="custom-year-month-filter" style="display: flex; align-items: center; gap: 8px; margin-left: 20px;">
+        // Create container
+        const $filterContainer = $(`
+            <div id="year-month-filter" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
                 <label style="margin: 0;">Year:</label>
-                <select id="custom-year" class="input-with-feedback" style="width: 100px;"></select>
+                <select id="year-dropdown" class="input-with-feedback" style="width: 100px;"></select>
                 <label style="margin: 0;">Month:</label>
-                <select id="custom-month" class="input-with-feedback" style="width: 120px;"></select>
+                <select id="month-dropdown" class="input-with-feedback" style="width: 150px;"></select>
             </div>
         `);
 
-        // Inject into list view title area
-        setTimeout(() => {
-            listview.page.$title_area.find('.title-text').after($container);
+        // Append to page form (most visible and reliable spot)
+        listview.page.page_form.append($filterContainer);
 
-            const $year = $('#custom-year');
-            const $month = $('#custom-month');
+        // Populate year dropdown
+        const $yearDropdown = $('#year-dropdown');
+        for (let y = currentYear - 1; y <= currentYear + 1; y++) {
+            $yearDropdown.append(`<option value="${y}">${y}</option>`);
+        }
+        $yearDropdown.val(currentYear);
 
-            // Populate year dropdown
-            for (let y = currentYear - 1; y <= currentYear + 1; y++) {
-                $year.append(`<option value="${y}">${y}</option>`);
+        // Populate month dropdown
+        const $monthDropdown = $('#month-dropdown');
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        months.forEach((month, index) => {
+            $monthDropdown.append(`<option value="${index + 1}">${month}</option>`);
+        });
+        $monthDropdown.val(currentMonth);
+
+        // Apply filters on change
+        function applyDateFilter() {
+            const selectedYear = parseInt($yearDropdown.val());
+            const selectedMonth = parseInt($monthDropdown.val());
+
+            if (!isNaN(selectedYear) && !isNaN(selectedMonth)) {
+                const start = frappe.datetime.obj_to_str(new Date(selectedYear, selectedMonth - 1, 1));
+                const end = frappe.datetime.obj_to_str(new Date(selectedYear, selectedMonth, 0));
+                listview.filter_area.clear();
+                listview.filter_area.add([
+                    ['RentalInvoices', 'inv_date', 'between', [start, end]]
+                ]);
+                listview.run();
             }
-            $year.val(currentYear);
+        }
 
-            // Populate month dropdown
-            const months = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            months.forEach((month, index) => {
-                $month.append(`<option value="${index + 1}">${month}</option>`);
-            });
-            $month.val(currentMonth);
+        $yearDropdown.on('change', applyDateFilter);
+        $monthDropdown.on('change', applyDateFilter);
 
-            function applyDateFilter() {
-                const selectedYear = parseInt($year.val());
-                const selectedMonth = parseInt($month.val());
-
-                if (!isNaN(selectedYear) && !isNaN(selectedMonth)) {
-                    const start = frappe.datetime.obj_to_str(new Date(selectedYear, selectedMonth - 1, 1));
-                    const end = frappe.datetime.obj_to_str(new Date(selectedYear, selectedMonth, 0));
-                    listview.filter_area.clear();
-                    listview.filter_area.add([
-                        ['RentalInvoices', 'inv_date', 'between', [start, end]]
-                    ]);
-                    listview.run();
-                }
-            }
-
-            $year.on('change', applyDateFilter);
-            $month.on('change', applyDateFilter);
-
-            // Initial filter
-            applyDateFilter();
-        }, 100); // delay to ensure listview is fully loaded
+        // Initial run
+        applyDateFilter();
     },
 
     refresh(listview) {
+        // Export Button
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -83,6 +82,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
+        // Approve Button
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -104,6 +104,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
+        // Hide sidebar and buttons for non-admins
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
