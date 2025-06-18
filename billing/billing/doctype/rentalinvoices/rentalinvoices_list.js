@@ -7,30 +7,24 @@ frappe.listview_settings['RentalInvoices'] = {
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
 
-        // Container to hold both filters
-        const filterContainer = $('<div class="custom-filter" style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>');
+        const container = $(`<div style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>`);
 
-        // Year label + select
         const yearLabel = $('<span style="font-weight: 500;">Year</span>');
         const yearSelect = $('<select class="form-control" style="width: 100px;"></select>');
-        yearSelect.append('<option value="">--</option>');
         years.forEach(year => {
             yearSelect.append(`<option value="${year}">${year}</option>`);
         });
 
-        // Month label + select
         const monthLabel = $('<span style="font-weight: 500;">Month</span>');
         const monthSelect = $('<select class="form-control" style="width: 140px;"></select>');
-        monthSelect.append('<option value="">--</option>');
-        months.forEach((month, idx) => {
-            monthSelect.append(`<option value="${idx + 1}">${month}</option>`);
+        months.forEach((month, index) => {
+            monthSelect.append(`<option value="${index + 1}">${month}</option>`);
         });
 
-        // Append all to container
-        filterContainer.append(yearLabel, yearSelect, monthLabel, monthSelect);
-        listview.page.$title_area.append(filterContainer);
+        container.append(yearLabel, yearSelect, monthLabel, monthSelect);
+        listview.page.$title_area.append(container);
 
-        function applyFilters() {
+        function applyFilter() {
             const year = yearSelect.val();
             const month = monthSelect.val();
 
@@ -46,12 +40,12 @@ frappe.listview_settings['RentalInvoices'] = {
             }
         }
 
-        yearSelect.on('change', applyFilters);
-        monthSelect.on('change', applyFilters);
+        yearSelect.on('change', applyFilter);
+        monthSelect.on('change', applyFilter);
     },
 
     refresh(listview) {
-        // Export button
+        // ✅ Export button (visible to all)
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -72,7 +66,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Approve button
+        // ✅ Approve button (visible to all)
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -94,13 +88,22 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Hide sidebar and New button for non-admins
+        // 🛑 Hide sidebar and New/Edit buttons for non-admin users
         if (!frappe.user.has_role('Administrator')) {
-            listview.page.sidebar.toggle(false);
-            $('.custom-btn-group').hide();
+            listview.page.sidebar.toggle(false); // Hide filter sidebar
+            $('.custom-btn-group').hide();       // Hide dropdown in list
 
             setTimeout(() => {
-                const toHide = ['Edit', 'Assign To', 'Clear Assignment', 'Apply Assignment Rule', 'Add Tags', 'Print', 'Delete'];
+                const toHide = [
+                    'Edit',
+                    'Assign To',
+                    'Clear Assignment',
+                    'Apply Assignment Rule',
+                    'Add Tags',
+                    'Print',
+                    'Delete'
+                ];
+
                 $('.dropdown-menu .dropdown-item').each(function () {
                     if (toHide.includes($(this).text().trim())) {
                         $(this).hide();
