@@ -1,38 +1,46 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
         const currentYear = new Date().getFullYear();
+        const currentMonth = new Date().getMonth() + 1;
 
-        // Dropdown container
-        const $container = $(`<div style="display: flex; gap: 10px; align-items: center; margin-left: 15px;"></div>`);
+        // Avoid re-adding dropdowns multiple times
+        if ($('#custom-filter-container').length) return;
 
-        // Year dropdown
-        const yearDropdown = $('<select class="form-control" style="width: 100px;"></select>');
+        // Create container
+        const $container = $(`
+            <div id="custom-filter-container" style="display: flex; align-items: center; gap: 10px; margin-left: 15px;">
+                <label style="margin: 0;">Year:</label>
+                <select id="year-dropdown" class="input-with-feedback" style="width: 100px;"></select>
+                <label style="margin: 0;">Month:</label>
+                <select id="month-dropdown" class="input-with-feedback" style="width: 150px;"></select>
+            </div>
+        `);
+
+        // Append container to title area
+        listview.page.$title_area.find('.custom-actions').prepend($container);
+
+        // Populate year dropdown
+        const $yearDropdown = $('#year-dropdown');
         for (let y = currentYear - 1; y <= currentYear + 1; y++) {
-            yearDropdown.append(`<option value="${y}">${y}</option>`);
+            $yearDropdown.append(`<option value="${y}">${y}</option>`);
         }
+        $yearDropdown.val(currentYear);
 
-        // Month dropdown
+        // Populate month dropdown
+        const $monthDropdown = $('#month-dropdown');
         const months = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
-        const monthDropdown = $('<select class="form-control" style="width: 150px;"></select>');
-        
-        for (let i = 0; i < months.length; i++) {
-            // i+1 is used to represent month index from 1 to 12
-            monthDropdown.append(`<option value="${i + 1}">${months[i]}</option>`);
-        }
+        months.forEach((month, index) => {
+            $monthDropdown.append(`<option value="${index + 1}">${month}</option>`);
+        });
+        $monthDropdown.val(currentMonth);
 
-        // Add labels and dropdowns to container
-        $container.append('<label>Year:</label>', yearDropdown, '<label>Month:</label>', monthDropdown);
-
-        // Append container to title area
-        listview.page.$title_area.append($container);
-
-        // Filter logic
+        // Apply filter function
         function applyDateFilter() {
-            const selectedYear = parseInt(yearDropdown.val());
-            const selectedMonth = parseInt(monthDropdown.val());
+            const selectedYear = parseInt($yearDropdown.val());
+            const selectedMonth = parseInt($monthDropdown.val());
 
             if (!isNaN(selectedYear) && !isNaN(selectedMonth)) {
                 const start = frappe.datetime.obj_to_str(new Date(selectedYear, selectedMonth - 1, 1));
@@ -45,13 +53,10 @@ frappe.listview_settings['RentalInvoices'] = {
             }
         }
 
-        // Apply filter when dropdowns change
-        yearDropdown.on('change', applyDateFilter);
-        monthDropdown.on('change', applyDateFilter);
+        $yearDropdown.on('change', applyDateFilter);
+        $monthDropdown.on('change', applyDateFilter);
 
-        // Trigger default filter to current month
-        yearDropdown.val(currentYear);
-        monthDropdown.val(new Date().getMonth() + 1);
+        // Initial filter
         applyDateFilter();
     },
 
@@ -99,7 +104,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Hide buttons for non-admin users
+        // Hide sidebar and buttons for non-admins
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
