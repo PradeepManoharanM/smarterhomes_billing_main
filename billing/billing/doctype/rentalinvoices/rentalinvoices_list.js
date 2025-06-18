@@ -3,41 +3,53 @@ frappe.listview_settings['RentalInvoices'] = {
         const currentYear = new Date().getFullYear();
         const years = [currentYear - 1, currentYear, currentYear + 1];
 
-        const monthMap = [
-            'January', 'February', 'March', 'April', 'May', 'June',
-            'July', 'August', 'September', 'October', 'November', 'December'
+        const months = [
+            { name: "January", value: 1 },
+            { name: "February", value: 2 },
+            { name: "March", value: 3 },
+            { name: "April", value: 4 },
+            { name: "May", value: 5 },
+            { name: "June", value: 6 },
+            { name: "July", value: 7 },
+            { name: "August", value: 8 },
+            { name: "September", value: 9 },
+            { name: "October", value: 10 },
+            { name: "November", value: 11 },
+            { name: "December", value: 12 }
         ];
 
-        // Create a container to hold both dropdowns
-        const container = $(`<div style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>`);
+        // Create container
+        const filterContainer = $(`<div style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>`);
 
         // Year dropdown
         const yearSelect = $('<select class="form-control" style="width: 100px;"></select>');
-        years.forEach(y => {
-            yearSelect.append(`<option value="${y}">${y}</option>`);
+        years.forEach(year => {
+            yearSelect.append(`<option value="${year}">${year}</option>`);
         });
 
         // Month dropdown
-        const monthSelect = $('<select class="form-control" style="width: 140px;"></select>');
-        monthMap.forEach((month, index) => {
-            monthSelect.append(`<option value="${index + 1}">${month}</option>`);
+        const monthSelect = $('<select class="form-control" style="width: 150px;"></select>');
+        months.forEach(month => {
+            monthSelect.append(`<option value="${month.value}">${month.name}</option>`);
         });
 
-        // Add labels and dropdowns to the container
-        container.append('<label style="margin-bottom: 0;">Year</label>', yearSelect);
-        container.append('<label style="margin-bottom: 0;">Month</label>', monthSelect);
+        // Add labels and dropdowns
+        filterContainer.append('<label style="margin: 0;">Year</label>');
+        filterContainer.append(yearSelect);
+        filterContainer.append('<label style="margin: 0;">Month</label>');
+        filterContainer.append(monthSelect);
 
-        // Append to title area
-        listview.page.$title_area.append(container);
+        listview.page.$title_area.append(filterContainer);
 
-        // Apply filter logic on change
-        function applyFilter() {
+        // Filter logic
+        function applyDateFilter() {
             const year = parseInt(yearSelect.val());
             const month = parseInt(monthSelect.val());
 
-            if (year && month) {
+            if (!isNaN(year) && !isNaN(month)) {
                 const start = frappe.datetime.obj_to_str(new Date(year, month - 1, 1));
                 const end = frappe.datetime.obj_to_str(new Date(year, month, 0));
+
                 listview.filter_area.clear();
                 listview.filter_area.add([
                     ['RentalInvoices', 'inv_date', 'between', [start, end]]
@@ -46,12 +58,12 @@ frappe.listview_settings['RentalInvoices'] = {
             }
         }
 
-        yearSelect.on('change', applyFilter);
-        monthSelect.on('change', applyFilter);
+        yearSelect.on('change', applyDateFilter);
+        monthSelect.on('change', applyDateFilter);
     },
 
     refresh(listview) {
-        // ✅ Export button (visible to all)
+        // Export Button
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -72,7 +84,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // ✅ Approve button (visible to all)
+        // Approve Button
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -94,7 +106,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // 🛑 Hide sidebar and dropdown for non-admin users
+        // Hide sidebar and dropdown button for non-admin users
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
