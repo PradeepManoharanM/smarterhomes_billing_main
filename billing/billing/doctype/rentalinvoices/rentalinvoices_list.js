@@ -3,12 +3,12 @@ frappe.listview_settings['RentalInvoices'] = {
         const currentYear = new Date().getFullYear();
         const currentMonth = new Date().getMonth() + 1;
 
-        // Avoid re-adding dropdowns multiple times
-        if ($('#custom-filter-container').length) return;
+        // Avoid duplicates
+        if ($('#year-month-filter').length) return;
 
         // Create container
-        const $container = $(`
-            <div id="custom-filter-container" style="display: flex; align-items: center; gap: 10px; margin-left: 15px;">
+        const $filterContainer = $(`
+            <div id="year-month-filter" style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
                 <label style="margin: 0;">Year:</label>
                 <select id="year-dropdown" class="input-with-feedback" style="width: 100px;"></select>
                 <label style="margin: 0;">Month:</label>
@@ -16,8 +16,8 @@ frappe.listview_settings['RentalInvoices'] = {
             </div>
         `);
 
-        // Append container to title area
-        listview.page.$title_area.find('.custom-actions').prepend($container);
+        // Append to page form (most visible and reliable spot)
+        listview.page.page_form.append($filterContainer);
 
         // Populate year dropdown
         const $yearDropdown = $('#year-dropdown');
@@ -37,7 +37,7 @@ frappe.listview_settings['RentalInvoices'] = {
         });
         $monthDropdown.val(currentMonth);
 
-        // Apply filter function
+        // Apply filters on change
         function applyDateFilter() {
             const selectedYear = parseInt($yearDropdown.val());
             const selectedMonth = parseInt($monthDropdown.val());
@@ -56,7 +56,7 @@ frappe.listview_settings['RentalInvoices'] = {
         $yearDropdown.on('change', applyDateFilter);
         $monthDropdown.on('change', applyDateFilter);
 
-        // Initial filter
+        // Initial run
         applyDateFilter();
     },
 
