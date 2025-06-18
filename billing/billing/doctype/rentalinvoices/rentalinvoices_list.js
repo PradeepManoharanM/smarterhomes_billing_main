@@ -4,44 +4,43 @@ frappe.listview_settings['RentalInvoices'] = {
         const years = [currentYear - 1, currentYear, currentYear + 1];
 
         const monthMap = [
-            { name: 'January', value: 1 },
-            { name: 'February', value: 2 },
-            { name: 'March', value: 3 },
-            { name: 'April', value: 4 },
-            { name: 'May', value: 5 },
-            { name: 'June', value: 6 },
-            { name: 'July', value: 7 },
-            { name: 'August', value: 8 },
-            { name: 'September', value: 9 },
-            { name: 'October', value: 10 },
-            { name: 'November', value: 11 },
-            { name: 'December', value: 12 }
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
         ];
 
+        // Create dropdown container
         const container = $(`<div style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>`);
 
-        const yearLabel = $('<span style="font-weight: 500;">Year</span>');
+        // Year Dropdown
         const yearSelect = $('<select class="form-control" style="width: 100px;"></select>');
         years.forEach(year => {
-            yearSelect.append(`<option value="${year}">${year}</option>`);
+            yearSelect.append($('<option>', {
+                value: year,
+                text: year
+            }));
         });
 
-        const monthLabel = $('<span style="font-weight: 500;">Month</span>');
+        // Month Dropdown
         const monthSelect = $('<select class="form-control" style="width: 140px;"></select>');
-        monthMap.forEach(m => {
-            monthSelect.append(`<option value="${m.value}">${m.name}</option>`);
+        monthMap.forEach((monthName, index) => {
+            monthSelect.append($('<option>', {
+                value: index + 1,
+                text: monthName
+            }));
         });
 
-        container.append(yearLabel, yearSelect, monthLabel, monthSelect);
+        container.append($('<span>Year</span>'), yearSelect, $('<span>Month</span>'), monthSelect);
         listview.page.$title_area.append(container);
 
+        // Apply Filter
         function applyFilter() {
-            const year = yearSelect.val();
-            const month = monthSelect.val();
+            const year = parseInt(yearSelect.val());
+            const month = parseInt(monthSelect.val());
 
             if (year && month) {
                 const start = frappe.datetime.obj_to_str(new Date(year, month - 1, 1));
                 const end = frappe.datetime.obj_to_str(new Date(year, month, 0));
+
                 listview.filter_area.clear();
                 listview.filter_area.add([
                     ['RentalInvoices', 'inv_date', 'between', [start, end]]
@@ -55,7 +54,7 @@ frappe.listview_settings['RentalInvoices'] = {
     },
 
     refresh(listview) {
-        // ✅ Export button
+        // Export Button
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -76,7 +75,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // ✅ Approve button
+        // Approve Button
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -98,24 +97,18 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // 🛑 Hide list view dropdown and sidebar for non-admins
+        // Hide sidebar and dropdown for non-admins
         if (!frappe.user.has_role('Administrator')) {
-            listview.page.sidebar.toggle(false); // Hide filter sidebar
-            $('.custom-btn-group').hide();       // Hide dropdown in list view header
+            listview.page.sidebar.toggle(false);
+            $('.custom-btn-group').hide();
 
             setTimeout(() => {
-                const toHide = [
-                    'Edit',
-                    'Assign To',
-                    'Clear Assignment',
-                    'Apply Assignment Rule',
-                    'Add Tags',
-                    'Print',
-                    'Delete'
+                const hideItems = [
+                    'Edit', 'Assign To', 'Clear Assignment',
+                    'Apply Assignment Rule', 'Add Tags', 'Print', 'Delete'
                 ];
-
                 $('.dropdown-menu .dropdown-item').each(function () {
-                    if (toHide.includes($(this).text().trim())) {
+                    if (hideItems.includes($(this).text().trim())) {
                         $(this).hide();
                     }
                 });
