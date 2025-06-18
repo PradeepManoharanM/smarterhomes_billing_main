@@ -8,30 +8,29 @@ frappe.listview_settings['RentalInvoices'] = {
         ];
 
         // Create container
-        const filterContainer = $(`<div style="display: flex; align-items: center; margin-left: 10px;"></div>`);
+        const filterContainer = $(`<div style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>`);
 
         // Year Label + Select
-        const yearLabel = $('<label style="margin-right: 5px; font-weight: 500;">Year</label>');
-        const yearSelect = $(`
-            <select class="form-control" style="width: 100px; margin-right: 15px;">
-                <option value="">--</option>
-                ${years.map(y => `<option value="${y}">${y}</option>`).join('')}
-            </select>
-        `);
+        const yearLabel = $('<label style="font-weight: 500;">Year</label>');
+        const yearSelect = $('<select class="form-control" style="width: 100px;"></select>');
+        yearSelect.append(`<option value="">--</option>`);
+        years.forEach(year => {
+            yearSelect.append(`<option value="${year}">${year}</option>`);
+        });
 
         // Month Label + Select
-        const monthLabel = $('<label style="margin-right: 5px; font-weight: 500;">Month</label>');
-        const monthSelect = $(`
-            <select class="form-control" style="width: 140px;">
-                <option value="">--</option>
-                ${months.map((name, index) => `<option value="${index + 1}">${name}</option>`).join('')}
-            </select>
-        `);
+        const monthLabel = $('<label style="font-weight: 500;">Month</label>');
+        const monthSelect = $('<select class="form-control" style="width: 140px;"></select>');
+        monthSelect.append(`<option value="">--</option>`);
+        months.forEach((month, index) => {
+            monthSelect.append(`<option value="${index + 1}">${month}</option>`);
+        });
 
-        // Append all elements to container
+        // Append to container and page
         filterContainer.append(yearLabel, yearSelect, monthLabel, monthSelect);
         listview.page.$title_area.append(filterContainer);
 
+        // Filtering Logic
         function applyDateFilter() {
             const year = yearSelect.val();
             const month = monthSelect.val();
@@ -96,7 +95,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Hide sidebar & buttons for non-admin
+        // Hide sidebar and new button for non-admin users
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
