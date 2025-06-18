@@ -2,8 +2,8 @@ frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
         const currentYear = new Date().getFullYear();
 
-        // Add dropdown container
-        const $container = $(`<div style="display: flex; gap: 10px; margin-left: 15px;"></div>`);
+        // Dropdown container
+        const $container = $(`<div style="display: flex; gap: 10px; align-items: center; margin-left: 15px;"></div>`);
 
         // Year dropdown
         const yearDropdown = $('<select class="form-control" style="width: 100px;"></select>');
@@ -11,27 +11,25 @@ frappe.listview_settings['RentalInvoices'] = {
             yearDropdown.append(`<option value="${y}">${y}</option>`);
         }
 
-        // Month dropdown with full names
+        // Month dropdown
         const months = [
             "January", "February", "March", "April", "May", "June",
             "July", "August", "September", "October", "November", "December"
         ];
-
         const monthDropdown = $('<select class="form-control" style="width: 150px;"></select>');
-        months.forEach((month, index) => {
-            monthDropdown.append(`<option value="${index + 1}">${month}</option>`);
-        });
+        
+        for (let i = 0; i < months.length; i++) {
+            // i+1 is used to represent month index from 1 to 12
+            monthDropdown.append(`<option value="${i + 1}">${months[i]}</option>`);
+        }
 
-        // Append dropdowns to the container
-        $container.append('<label>Year</label>');
-        $container.append(yearDropdown);
-        $container.append('<label>Month</label>');
-        $container.append(monthDropdown);
+        // Add labels and dropdowns to container
+        $container.append('<label>Year:</label>', yearDropdown, '<label>Month:</label>', monthDropdown);
 
-        // Append to title area
+        // Append container to title area
         listview.page.$title_area.append($container);
 
-        // Apply filter logic
+        // Filter logic
         function applyDateFilter() {
             const selectedYear = parseInt(yearDropdown.val());
             const selectedMonth = parseInt(monthDropdown.val());
@@ -47,8 +45,14 @@ frappe.listview_settings['RentalInvoices'] = {
             }
         }
 
+        // Apply filter when dropdowns change
         yearDropdown.on('change', applyDateFilter);
         monthDropdown.on('change', applyDateFilter);
+
+        // Trigger default filter to current month
+        yearDropdown.val(currentYear);
+        monthDropdown.val(new Date().getMonth() + 1);
+        applyDateFilter();
     },
 
     refresh(listview) {
