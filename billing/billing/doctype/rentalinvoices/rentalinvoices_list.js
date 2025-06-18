@@ -8,31 +8,29 @@ frappe.listview_settings['RentalInvoices'] = {
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
 
-        // Create dropdown container
+        // Create a container to hold both dropdowns
         const container = $(`<div style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>`);
 
-        // Year Dropdown
+        // Year dropdown
         const yearSelect = $('<select class="form-control" style="width: 100px;"></select>');
-        years.forEach(year => {
-            yearSelect.append($('<option>', {
-                value: year,
-                text: year
-            }));
+        years.forEach(y => {
+            yearSelect.append(`<option value="${y}">${y}</option>`);
         });
 
-        // Month Dropdown
+        // Month dropdown
         const monthSelect = $('<select class="form-control" style="width: 140px;"></select>');
-        monthMap.forEach((monthName, index) => {
-            monthSelect.append($('<option>', {
-                value: index + 1,
-                text: monthName
-            }));
+        monthMap.forEach((month, index) => {
+            monthSelect.append(`<option value="${index + 1}">${month}</option>`);
         });
 
-        container.append($('<span>Year</span>'), yearSelect, $('<span>Month</span>'), monthSelect);
+        // Add labels and dropdowns to the container
+        container.append('<label style="margin-bottom: 0;">Year</label>', yearSelect);
+        container.append('<label style="margin-bottom: 0;">Month</label>', monthSelect);
+
+        // Append to title area
         listview.page.$title_area.append(container);
 
-        // Apply Filter
+        // Apply filter logic on change
         function applyFilter() {
             const year = parseInt(yearSelect.val());
             const month = parseInt(monthSelect.val());
@@ -40,7 +38,6 @@ frappe.listview_settings['RentalInvoices'] = {
             if (year && month) {
                 const start = frappe.datetime.obj_to_str(new Date(year, month - 1, 1));
                 const end = frappe.datetime.obj_to_str(new Date(year, month, 0));
-
                 listview.filter_area.clear();
                 listview.filter_area.add([
                     ['RentalInvoices', 'inv_date', 'between', [start, end]]
@@ -54,7 +51,7 @@ frappe.listview_settings['RentalInvoices'] = {
     },
 
     refresh(listview) {
-        // Export Button
+        // ✅ Export button (visible to all)
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -75,7 +72,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Approve Button
+        // ✅ Approve button (visible to all)
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -97,18 +94,25 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Hide sidebar and dropdown for non-admins
+        // 🛑 Hide sidebar and dropdown for non-admin users
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
 
             setTimeout(() => {
-                const hideItems = [
-                    'Edit', 'Assign To', 'Clear Assignment',
-                    'Apply Assignment Rule', 'Add Tags', 'Print', 'Delete'
+                const itemsToHide = [
+                    'Edit',
+                    'Assign To',
+                    'Clear Assignment',
+                    'Apply Assignment Rule',
+                    'Add Tags',
+                    'Print',
+                    'Delete'
                 ];
+
                 $('.dropdown-menu .dropdown-item').each(function () {
-                    if (hideItems.includes($(this).text().trim())) {
+                    const label = $(this).text().trim();
+                    if (itemsToHide.includes(label)) {
                         $(this).hide();
                     }
                 });
