@@ -7,31 +7,30 @@ frappe.listview_settings['RentalInvoices'] = {
             'July', 'August', 'September', 'October', 'November', 'December'
         ];
 
-        // Create container
-        const filterContainer = $(`<div style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>`);
+        // Container to hold both filters
+        const filterContainer = $('<div class="custom-filter" style="display: flex; align-items: center; gap: 10px; margin-left: 15px;"></div>');
 
-        // Year Label + Select
-        const yearLabel = $('<label style="font-weight: 500;">Year</label>');
+        // Year label + select
+        const yearLabel = $('<span style="font-weight: 500;">Year</span>');
         const yearSelect = $('<select class="form-control" style="width: 100px;"></select>');
-        yearSelect.append(`<option value="">--</option>`);
+        yearSelect.append('<option value="">--</option>');
         years.forEach(year => {
             yearSelect.append(`<option value="${year}">${year}</option>`);
         });
 
-        // Month Label + Select
-        const monthLabel = $('<label style="font-weight: 500;">Month</label>');
+        // Month label + select
+        const monthLabel = $('<span style="font-weight: 500;">Month</span>');
         const monthSelect = $('<select class="form-control" style="width: 140px;"></select>');
-        monthSelect.append(`<option value="">--</option>`);
-        months.forEach((month, index) => {
-            monthSelect.append(`<option value="${index + 1}">${month}</option>`);
+        monthSelect.append('<option value="">--</option>');
+        months.forEach((month, idx) => {
+            monthSelect.append(`<option value="${idx + 1}">${month}</option>`);
         });
 
-        // Append to container and page
+        // Append all to container
         filterContainer.append(yearLabel, yearSelect, monthLabel, monthSelect);
         listview.page.$title_area.append(filterContainer);
 
-        // Filtering Logic
-        function applyDateFilter() {
+        function applyFilters() {
             const year = yearSelect.val();
             const month = monthSelect.val();
 
@@ -47,12 +46,12 @@ frappe.listview_settings['RentalInvoices'] = {
             }
         }
 
-        yearSelect.on('change', applyDateFilter);
-        monthSelect.on('change', applyDateFilter);
+        yearSelect.on('change', applyFilters);
+        monthSelect.on('change', applyFilters);
     },
 
     refresh(listview) {
-        // Export
+        // Export button
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -73,7 +72,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Approve
+        // Approve button
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -95,20 +94,15 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // Hide sidebar and new button for non-admin users
+        // Hide sidebar and New button for non-admins
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
 
             setTimeout(() => {
-                const itemsToHide = [
-                    'Edit', 'Assign To', 'Clear Assignment', 'Apply Assignment Rule',
-                    'Add Tags', 'Print', 'Delete'
-                ];
-
+                const toHide = ['Edit', 'Assign To', 'Clear Assignment', 'Apply Assignment Rule', 'Add Tags', 'Print', 'Delete'];
                 $('.dropdown-menu .dropdown-item').each(function () {
-                    const label = $(this).text().trim();
-                    if (itemsToHide.includes(label)) {
+                    if (toHide.includes($(this).text().trim())) {
                         $(this).hide();
                     }
                 });
