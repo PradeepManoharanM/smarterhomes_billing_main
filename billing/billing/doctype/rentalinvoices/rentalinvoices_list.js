@@ -1,21 +1,36 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
-        // ✅ Month dropdown (without year prefix)
-        const monthOptions = ['', '01', '02', '03', '04', '05', '06',
-                              '07', '08', '09', '10', '11', '12'];
+        const currentYear = new Date().getFullYear();
+        const years = [currentYear - 1, currentYear, currentYear + 1];
+        const months = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
 
-        const monthSelect = $(`<select class="form-control" style="width: 150px; margin-left: 10px;">
-            ${monthOptions.map(m => `<option value="${m}">${m ? `Month ${m}` : 'Select Month'}</option>`).join('')}
+        // Create Year Dropdown
+        const yearLabel = $(`<label style="margin-left: 10px; font-weight: 500;">Year</label>`);
+        const yearSelect = $(`<select class="form-control" style="width: 100px; margin-left: 5px;">
+            <option value="">--</option>
+            ${years.map(y => `<option value="${y}">${y}</option>`).join('')}
         </select>`);
 
-        listview.page.$title_area.append(monthSelect);
+        // Create Month Dropdown
+        const monthLabel = $(`<label style="margin-left: 10px; font-weight: 500;">Month</label>`);
+        const monthSelect = $(`<select class="form-control" style="width: 140px; margin-left: 5px;">
+            <option value="">--</option>
+            ${months.map((name, index) => `<option value="${index + 1}">${name}</option>`).join('')}
+        </select>`);
 
-        monthSelect.on('change', function () {
-            const selectedMonth = $(this).val();
-            if (selectedMonth) {
-                const year = frappe.datetime.get_today().split('-')[0]; // Use current year
-                const start = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(selectedMonth) - 1, 1));
-                const end = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(selectedMonth), 0));
+        // Append both filters
+        listview.page.$title_area.append(yearLabel).append(yearSelect).append(monthLabel).append(monthSelect);
+
+        function applyDateFilter() {
+            const year = yearSelect.val();
+            const month = monthSelect.val();
+
+            if (year && month) {
+                const start = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(month) - 1, 1));
+                const end = frappe.datetime.obj_to_str(new Date(parseInt(year), parseInt(month), 0));
 
                 listview.filter_area.clear();
                 listview.filter_area.add([
@@ -23,11 +38,14 @@ frappe.listview_settings['RentalInvoices'] = {
                 ]);
                 listview.run();
             }
-        });
+        }
+
+        yearSelect.on('change', applyDateFilter);
+        monthSelect.on('change', applyDateFilter);
     },
 
     refresh(listview) {
-        // ✅ Export button visible to all
+        // ✅ Export button
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -48,7 +66,7 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // ✅ Approve button visible to all
+        // ✅ Approve button
         listview.page.add_actions_menu_item(__('Approve'), function () {
             const selected = listview.get_checked_items();
             if (!selected.length) {
@@ -70,23 +88,15 @@ frappe.listview_settings['RentalInvoices'] = {
             });
         });
 
-        // 🛑 Hide sidebar and "New" button for non-admin users
+        // 🛑 Hide sidebar & buttons for non-admin users
         if (!frappe.user.has_role('Administrator')) {
-
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
 
             setTimeout(() => {
-                // Hide sidebar
-                
                 const itemsToHide = [
-                    'Edit',
-                    'Assign To',
-                    'Clear Assignment',
-                    'Apply Assignment Rule',
-                    'Add Tags',
-                    'Print',
-                    'Delete'
+                    'Edit', 'Assign To', 'Clear Assignment', 'Apply Assignment Rule',
+                    'Add Tags', 'Print', 'Delete'
                 ];
 
                 $('.dropdown-menu .dropdown-item').each(function () {
@@ -95,9 +105,6 @@ frappe.listview_settings['RentalInvoices'] = {
                         $(this).hide();
                     }
                 });
-
-                // Hide "New" button
-                // listview.page.btn_primary?.hide();
             }, 300);
         }
     }
