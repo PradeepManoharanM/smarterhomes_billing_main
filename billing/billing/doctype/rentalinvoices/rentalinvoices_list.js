@@ -108,6 +108,26 @@ frappe.listview_settings['RentalInvoices'] = {
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
+
+            setTimeout(() => {
+                const itemsToHide = [
+                    'Edit',
+                    'Assign To',
+                    'Clear Assignment',
+                    'Apply Assignment Rule',
+                    'Add Tags',
+                    'Print',
+                    'Delete'
+                ];
+
+                $('.dropdown-menu .dropdown-item').each(function () {
+                    const label = $(this).text().trim();
+                    if (itemsToHide.includes(label)) {
+                        $(this).hide();
+                    }
+                });
+
+            }, 1000);
         }
     }
 };
