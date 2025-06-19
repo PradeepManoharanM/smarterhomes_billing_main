@@ -62,6 +62,13 @@ frappe.listview_settings['RentalInvoices'] = {
 
     refresh(listview) {
         // Export Button
+
+        if (!frappe.user.has_role('Administrator')) {
+
+            listview.page.sidebar.hide();
+            listview.page.sidebar.toggle(false);
+        }
+        
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -123,8 +130,7 @@ frappe.listview_settings['RentalInvoices'] = {
 
                 $('.dropdown-menu .dropdown-item').each(function () {
                     const label = $(this).text().trim();
-                    listview.page.sidebar.hide();
-                    listview.page.sidebar.toggle(false);
+                    
                     if (itemsToHide.includes(label)) {
                         $(this).hide();
                     }
