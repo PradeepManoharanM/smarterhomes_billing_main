@@ -106,9 +106,9 @@ frappe.listview_settings['RentalInvoices'] = {
 
         // Hide sidebar and buttons for non-admins
         if (!frappe.user.has_role('Administrator')) {
-            listview.page.sidebar.toggle(false);
+            
             $('.custom-btn-group').hide();
-            listview.page.sidebar.hide();
+            
 
             setTimeout(() => {
                 const itemsToHide = [
@@ -123,6 +123,8 @@ frappe.listview_settings['RentalInvoices'] = {
 
                 $('.dropdown-menu .dropdown-item').each(function () {
                     const label = $(this).text().trim();
+                    listview.page.sidebar.hide();
+                    listview.page.sidebar.toggle(false);
                     if (itemsToHide.includes(label)) {
                         $(this).hide();
                     }
