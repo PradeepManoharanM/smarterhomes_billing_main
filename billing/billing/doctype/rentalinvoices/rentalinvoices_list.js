@@ -1,5 +1,12 @@
 frappe.listview_settings['RentalInvoices'] = {
     onload(listview) {
+
+        if (!frappe.user.has_role('Administrator')) {
+
+            listview.page.sidebar.hide();
+            listview.page.sidebar.toggle(false);
+        }
+        
         const currentYear = new Date().getFullYear();
         const currentMonth = new Date().getMonth() + 1;
 
@@ -63,12 +70,6 @@ frappe.listview_settings['RentalInvoices'] = {
     refresh(listview) {
         // Export Button
 
-        if (!frappe.user.has_role('Administrator')) {
-
-            listview.page.sidebar.hide();
-            listview.page.sidebar.toggle(false);
-        }
-        
         listview.page.add_actions_menu_item(__('Export'), function () {
             const filters = listview.get_filters_for_args();
             frappe.call({
@@ -128,13 +129,13 @@ frappe.listview_settings['RentalInvoices'] = {
                     'Delete'
                 ];
 
-                $('.dropdown-menu .dropdown-item').each(function () {
-                    const label = $(this).text().trim();
+                // $('.dropdown-menu .dropdown-item').each(function () {
+                //     const label = $(this).text().trim();
                     
-                    if (itemsToHide.includes(label)) {
-                        $(this).hide();
-                    }
-                });
+                //     if (itemsToHide.includes(label)) {
+                //         $(this).hide();
+                //     }
+                // });
 
             }, 1000);
         }
