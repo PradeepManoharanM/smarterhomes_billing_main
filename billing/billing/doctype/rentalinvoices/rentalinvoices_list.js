@@ -5,8 +5,9 @@ frappe.listview_settings['RentalInvoices'] = {
 
             listview.page.sidebar.hide();
             listview.page.sidebar.toggle(false);
+            $('.layout-side-section').hide();
         }
-        
+
         const currentYear = new Date().getFullYear();
         const currentMonth = new Date().getMonth() + 1;
 
