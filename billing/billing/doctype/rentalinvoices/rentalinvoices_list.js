@@ -108,6 +108,7 @@ frappe.listview_settings['RentalInvoices'] = {
         if (!frappe.user.has_role('Administrator')) {
             listview.page.sidebar.toggle(false);
             $('.custom-btn-group').hide();
+            listview.page.sidebar.hide();
 
             setTimeout(() => {
                 const itemsToHide = [
