@@ -11,11 +11,13 @@
   "appr_rate",
   "appr_period",
   "column_break_mybt",
+  "caf_serial_number",
   "meter_count",
   "meter_type",
   "plantype",
   "contract_period",
-  "naming_series"
+  "naming_series",
+  "scanned_copy_upload"
  ],
  "fields": [
   {
@@ -92,11 +94,21 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "ID"
+  },
+  {
+   "fieldname": "caf_serial_number",
+   "fieldtype": "Data",
+   "label": "CAF Serial Number"
+  },
+  {
+   "fieldname": "scanned_copy_upload",
+   "fieldtype": "Attach",
+   "label": "Scanned Copy Upload"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-22 11:17:39.025250",
+ "modified": "2025-07-29 12:01:48.062391",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalContracts",

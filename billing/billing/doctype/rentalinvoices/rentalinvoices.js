@@ -10,7 +10,7 @@ frappe.ui.form.on("RentalInvoices", {
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
               
-                frm.disable_save();
+                // frm.disable_save();
                 setTimeout(() => {
                         
                     frm.page.menu.find('.dropdown-item:contains("Jump to field")').hide();
@@ -25,26 +25,53 @@ frappe.ui.form.on("RentalInvoices", {
 
 
     re_calculate_invoice: function(frm) {
-        handle_invoice_action(frm, "recalculate");
+
+        frappe.call({
+            method: "propman.propman.doctype.rentalinvoices.rentalinvoices.calculate_invoice",
+            args: {
+
+                "doc": frm.doc,
+               
+            },
+        })
+        // handle_invoice_action(frm, "recalculate");
     },
     approve_and_email_invoice: function(frm) {
-        handle_invoice_action(frm, "approve_email");
+
+        frappe.call({
+            method: "propman.propman.doctype.rentalinvoices.rentalinvoices.approve_and_email_invoice",
+            args: {
+
+                "doc": frm.doc,
+               
+            },
+        })
+        // handle_invoice_action(frm, "approve_email");
     },
     view_invoice: function(frm) {
-        handle_invoice_action(frm, "view");
+
+        frappe.call({
+            method: "propman.propman.doctype.rentalinvoices.rentalinvoices.view_invoice",
+            args: {
+
+                "doc": frm.doc,
+               
+            },
+        })
+        // handle_invoice_action(frm, "view");
     }
 
 
 });
 
 
-function handle_invoice_action(frm, action_type) {
-    // Centralized logic for all button actions
-    if (action_type === "recalculate") {
-        // call API or logic
-    } else if (action_type === "approve_email") {
-        // send email logic
-    } else if (action_type === "view") {
-        // open PDF or something
-    }
-}
+// function handle_invoice_action(frm, action_type) {
+//     // Centralized logic for all button actions
+//     if (action_type === "recalculate") {
+//         // call API or logic
+//     } else if (action_type === "approve_email") {
+//         // send email logic
+//     } else if (action_type === "view") {
+//         // open PDF or something
+//     }
+// }
