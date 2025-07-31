@@ -27,7 +27,6 @@
   "column_break_ppkr",
   "inv_status",
   "amt_rcvd",
-  "total_due",
   "tds"
  ],
  "fields": [
@@ -168,22 +167,14 @@
    "fieldname": "amt_rcvd",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Amount Received",
+   "label": "Amount Received against this invoice",
    "precision": "2"
-  },
-  {
-   "fieldname": "total_due",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Total Due",
-   "precision": "2",
-   "read_only": 1
   },
   {
    "fieldname": "tds",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "TDS",
+   "label": "TDS for the above, if any",
    "precision": "2"
   },
   {
@@ -196,7 +187,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-06-17 18:17:06.869808",
+ "modified": "2025-07-31 13:27:56.114332",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalInvoices",
