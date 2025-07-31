@@ -26,15 +26,51 @@ frappe.ui.form.on("RentalInvoices", {
 
     re_calculate_invoice: function(frm) {
 
-        frappe.call({
-            method: "propman.propman.doctype.rentalinvoices.rentalinvoices.calculate_invoice",
-            args: {
+        // frappe.call({
+        //     method: "propman.propman.doctype.rentalinvoices.rentalinvoices.calculate_invoice",
+        //     args: {
 
-                "doc": frm.doc,
+        //         "doc": frm.doc,
                
-            },
-        })
+        //     },
+        // })
         // handle_invoice_action(frm, "recalculate");
+
+        (async () => {
+                    const propertyName = frm.doc.property_name;
+                    const invDate = frm.doc.inv_date;
+
+                    if (!propertyName || !invDate) {
+                        frappe.msgprint("Property Name or Invoice Date is missing.");
+                        return;
+                    }
+
+                    const payload = {
+                        request: "regenerateInvoice",
+                        property_name: propertyName,
+                        date: invDate
+                    };
+
+                    try {
+                        const response = await fetch("https://propmandev.wateron.cc:8881", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify(payload)
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        const result = await response.json();
+                        frappe.msgprint("Recalculation triggered: " + JSON.stringify(result));
+
+                    } catch (error) {
+                        frappe.msgprint("API Call Failed: " + error.message);
+                    }
+                })();
     },
     approve_and_email_invoice: function(frm) {
 
@@ -47,6 +83,8 @@ frappe.ui.form.on("RentalInvoices", {
             },
         })
         // handle_invoice_action(frm, "approve_email");
+
+        
     },
     view_invoice: function(frm) {
 
