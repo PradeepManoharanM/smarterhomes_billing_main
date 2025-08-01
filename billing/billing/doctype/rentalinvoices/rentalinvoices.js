@@ -67,7 +67,7 @@ frappe.ui.form.on("RentalInvoices", {
         }
 
         const payload = {
-            request: "approve",
+            // request: "approve",
             property_name: frm.doc.property_name,
             date: frm.doc.inv_date
         };
