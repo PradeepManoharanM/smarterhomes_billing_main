@@ -27,53 +27,37 @@ frappe.ui.form.on("RentalInvoices", {
 
 
    re_calculate_invoice: function (frm) {
-    (async () => {
-        const propertyName = frm.doc.property_name;
-        const invDate = frm.doc.inv_date;
+    const propertyName = frm.doc.property_name;
+    const invDate = frm.doc.inv_date;
 
-        if (!propertyName || !invDate) {
-            frappe.msgprint("Please ensure both Property Name and Invoice Date are filled.");
-            return;
-        }
+    if (!propertyName || !invDate) {
+        frappe.msgprint("Please ensure both Property Name and Invoice Date are filled.");
+        return;
+    }
 
-        const formattedDate = frappe.datetime.str_to_obj(invDate).toISOString().split('T')[0];
-
-        const payload = {
+    frappe.call({
+        method: "your_app.api.invoice.call_recalculate_invoice",
+        args: {
             property_name: propertyName,
-            date: formattedDate
-        };
-
-        try {
-            const response = await fetch("https://propmandev.wateron.cc:8881", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`API request failed with status ${response.status}: ${errorText}`);
-            }
-
-            const result = await response.json();
-
+            date: invDate
+        },
+        callback: function(r) {
             frappe.msgprint({
-                title: "Recalculation Success",
-                message: JSON.stringify(result),
+                title: "Recalculation Result",
+                message: JSON.stringify(r.message),
                 indicator: "green"
             });
-
-        } catch (error) {
+        },
+        error: function(err) {
             frappe.msgprint({
                 title: "Recalculation Failed",
-                message: error.message,
+                message: "Backend call failed.",
                 indicator: "red"
             });
         }
-    })();
+    });
 },
+
 
 
     approve_and_email_invoice: function(frm) {

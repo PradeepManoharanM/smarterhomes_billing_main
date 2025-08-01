@@ -4,6 +4,8 @@
 import frappe
 from frappe import _
 from frappe.model.document import Document
+import requests
+
 
 
 class RentalInvoices(Document):
@@ -34,3 +36,20 @@ def view_invoice(doc):
     doc = frappe._dict(frappe.parse_json(doc))
     
     frappe.msgprint(_("Viewing invoice: {0}").format(doc.get("name")))
+
+
+
+@frappe.whitelist()
+def call_recalculate_invoice(property_name, date):
+    url = "https://propmandev.wateron.cc:8881"
+    headers = {"Content-Type": "application/json"}
+    payload = {
+        "property_name": property_name,
+        "date": date
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+    try:
+        return response.json()
+    except Exception:
+        return {"status": "fail", "detail": response.text}
