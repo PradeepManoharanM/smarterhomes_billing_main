@@ -36,13 +36,15 @@ frappe.ui.form.on("RentalInvoices", {
             return;
         }
 
+        const formattedDate = frappe.datetime.str_to_obj(invDate).toISOString().split('T')[0];
+
         const payload = {
             property_name: propertyName,
-            date: invDate
+            date: formattedDate
         };
 
         try {
-            const response = await fetch("https://propmandev.wateron.cc", {
+            const response = await fetch("https://propmandev.wateron.cc:8881", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -51,7 +53,8 @@ frappe.ui.form.on("RentalInvoices", {
             });
 
             if (!response.ok) {
-                throw new Error(`API request failed with status ${response.status}`);
+                const errorText = await response.text();
+                throw new Error(`API request failed with status ${response.status}: ${errorText}`);
             }
 
             const result = await response.json();
@@ -71,6 +74,7 @@ frappe.ui.form.on("RentalInvoices", {
         }
     })();
 },
+
 
     approve_and_email_invoice: function(frm) {
         // Prepare dynamic data from the form
@@ -112,8 +116,7 @@ frappe.ui.form.on("RentalInvoices", {
     },
     discount: function(frm) {
         toggle_recalculate_button(frm);
-    },
-
+    }
 
 });
 
