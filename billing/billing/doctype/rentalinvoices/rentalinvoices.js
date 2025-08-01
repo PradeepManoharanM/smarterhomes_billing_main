@@ -62,34 +62,36 @@ frappe.ui.form.on("RentalInvoices", {
 
     approve_and_email_invoice: function(frm) {
         if (!frm.doc.property_name || !frm.doc.inv_date) {
-            frappe.msgprint("Property Name and Invoice Date are required.");
+            frappe.msgprint("Please fill both Property Name and Invoice Date.");
             return;
         }
 
         const payload = {
-            // request: "approve",
+            request: "approve",
             property_name: frm.doc.property_name,
             date: frm.doc.inv_date
         };
 
-        frappe.call({
-            method: "frappe.client.post",
-            args: {
-                url: "https://propmandev.wateron.cc:8881",
-                data: payload
+        fetch('https://propmandev.wateron.cc:8881', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
             },
-            callback: function(response) {
-                if (response && response.message) {
-                    frappe.msgprint("Approved and emailed successfully.");
-                    console.log(response.message);
-                } else {
-                    frappe.msgprint("No response received.");
-                }
-            },
-            error: function(err) {
-                frappe.msgprint("Request failed. See console for details.");
-                console.error(err);
+            body: JSON.stringify(payload)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("HTTP error " + response.status);
             }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Success:", data);
+            frappe.msgprint("Approval request sent successfully.");
+        })
+        .catch(error => {
+            console.error("Error:", error);
+            frappe.msgprint("Failed to send approval request. Check console.");
         });
     },
     view_invoice: function(frm) {
