@@ -36,7 +36,7 @@ frappe.ui.form.on("RentalInvoices", {
     }
 
     frappe.call({
-        method: "your_app.api.invoice.call_recalculate_invoice",
+        method: "propman.propman.doctype.rentalinvoices.rentalinvoices.call_recalculate_invoice",
         args: {
             property_name: propertyName,
             date: invDate
