@@ -7,6 +7,8 @@ frappe.ui.form.on("RentalInvoices", {
             $('.prev-doc').hide();
             $('.next-doc').hide();
             // frm.disable_save();
+            set_fields_readonly_based_on_inv_date(frm);
+            toggle_recalculate_button(frm);
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
               
@@ -24,67 +26,77 @@ frappe.ui.form.on("RentalInvoices", {
         },
 
 
-    re_calculate_invoice: function(frm) {
+   re_calculate_invoice: function (frm) {
+    (async () => {
+        const propertyName = frm.doc.property_name;
+        const invDate = frm.doc.inv_date;
 
-        // frappe.call({
-        //     method: "propman.propman.doctype.rentalinvoices.rentalinvoices.calculate_invoice",
-        //     args: {
+        if (!propertyName || !invDate) {
+            frappe.msgprint("Please ensure both Property Name and Invoice Date are filled.");
+            return;
+        }
 
-        //         "doc": frm.doc,
-               
-        //     },
-        // })
-        // handle_invoice_action(frm, "recalculate");
+        const payload = {
+            property_name: propertyName,
+            date: invDate
+        };
 
-        (async () => {
-                    const propertyName = frm.doc.property_name;
-                    const invDate = frm.doc.inv_date;
+        try {
+            const response = await fetch("https://propmandev.wateron.cc:8881", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
 
-                    if (!propertyName || !invDate) {
-                        frappe.msgprint("Property Name or Invoice Date is missing.");
-                        return;
-                    }
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
 
-                    const payload = {
-                        request: "regenerateInvoice",
-                        property_name: propertyName,
-                        date: invDate
-                    };
+            const result = await response.json();
 
-                    try {
-                        const response = await fetch("http://propmandev.wateron.cc:8881", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify(payload)
-                        });
+            frappe.msgprint({
+                title: "Recalculation Success",
+                message: JSON.stringify(result),
+                indicator: "green"
+            });
 
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! Status: ${response.status}`);
-                        }
+        } catch (error) {
+            frappe.msgprint({
+                title: "Recalculation Failed",
+                message: error.message,
+                indicator: "red"
+            });
+        }
+    })();
+},
 
-                        const result = await response.json();
-                        frappe.msgprint("Recalculation triggered: " + JSON.stringify(result));
-
-                    } catch (error) {
-                        frappe.msgprint("API Call Failed: " + error.message);
-                    }
-                })();
-    },
     approve_and_email_invoice: function(frm) {
+        // Prepare dynamic data from the form
+        const payload = {
+            property_name: frm.doc.property_name,
+            date: frm.doc.posting_date || frappe.datetime.get_today()
+        };
 
         frappe.call({
-            method: "propman.propman.doctype.rentalinvoices.rentalinvoices.approve_and_email_invoice",
+            method: "frappe.client.post",
             args: {
-
-                "doc": frm.doc,
-               
+                url: "https://propmandev.wateron.cc:8881",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
             },
-        })
-        // handle_invoice_action(frm, "approve_email");
-
-        
+            callback: function(response) {
+                frappe.msgprint("API call successful");
+                console.log(response.message);
+            },
+            error: function(err) {
+                frappe.msgprint("API call failed");
+                console.error(err);
+            }
+        });
     },
     view_invoice: function(frm) {
 
@@ -97,10 +109,46 @@ frappe.ui.form.on("RentalInvoices", {
             },
         })
         // handle_invoice_action(frm, "view");
-    }
+    },
+    discount: function(frm) {
+        toggle_recalculate_button(frm);
+    },
 
 
 });
+
+function set_fields_readonly_based_on_inv_date(frm) {
+    if (!frm.doc.inv_date) return;
+
+    const invDate = frappe.datetime.str_to_obj(frm.doc.inv_date);
+    const today = frappe.datetime.str_to_obj(frappe.datetime.get_today());
+
+    const sameMonth = (invDate.getMonth() === today.getMonth()) &&
+                      (invDate.getFullYear() === today.getFullYear());
+
+    const fields = ['discount', 'amt_rcvd', 'tds'];
+
+    fields.forEach(field => {
+        frm.set_df_property(field, 'read_only', !sameMonth);
+    });
+
+    // If switching from read-only to editable, refresh the fields to reflect it
+    frm.refresh_fields(fields);
+}
+
+function toggle_recalculate_button(frm) {
+    const is_dirty = frm.is_dirty();  // Checks if anything changed
+    const changed_discount = frm.doc.discount !== frm.__last_sync?.discount;
+
+    setTimeout(() => {
+        const button = $('button:contains("Re calculate Invoice")');
+        if (changed_discount) {
+            button.show();
+        } else {
+            button.hide();
+        }
+    }, 100);
+}
 
 
 // function handle_invoice_action(frm, action_type) {
