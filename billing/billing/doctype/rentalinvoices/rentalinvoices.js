@@ -61,27 +61,33 @@ frappe.ui.form.on("RentalInvoices", {
 
 
     approve_and_email_invoice: function(frm) {
-        // Prepare dynamic data from the form
+        if (!frm.doc.property_name || !frm.doc.inv_date) {
+            frappe.msgprint("Property Name and Invoice Date are required.");
+            return;
+        }
+
         const payload = {
+            // request: "approve",
             property_name: frm.doc.property_name,
-            date: frm.doc.posting_date || frappe.datetime.get_today()
+            date: frm.doc.inv_date
         };
 
         frappe.call({
             method: "frappe.client.post",
             args: {
-                url: "https://propmandev.wateron.cc",
-                headers: {
-                    "Content-Type": "application/json"
-                },
+                url: "https://propmandev.wateron.cc:8881",
                 data: payload
             },
             callback: function(response) {
-                frappe.msgprint("API call successful");
-                console.log(response.message);
+                if (response && response.message) {
+                    frappe.msgprint("Approved and emailed successfully.");
+                    console.log(response.message);
+                } else {
+                    frappe.msgprint("No response received.");
+                }
             },
             error: function(err) {
-                frappe.msgprint("API call failed");
+                frappe.msgprint("Request failed. See console for details.");
                 console.error(err);
             }
         });
