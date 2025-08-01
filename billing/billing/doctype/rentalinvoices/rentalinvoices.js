@@ -42,7 +42,7 @@ frappe.ui.form.on("RentalInvoices", {
         };
 
         try {
-            const response = await fetch("https://propmandev.wateron.cc:8881", {
+            const response = await fetch("https://propmandev.wateron.cc", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -82,7 +82,7 @@ frappe.ui.form.on("RentalInvoices", {
         frappe.call({
             method: "frappe.client.post",
             args: {
-                url: "https://propmandev.wateron.cc:8881",
+                url: "https://propmandev.wateron.cc",
                 headers: {
                     "Content-Type": "application/json"
                 },
