@@ -77,9 +77,9 @@
   },
   {
    "fieldname": "meter_type",
-   "fieldtype": "Data",
+   "fieldtype": "Select",
    "label": "Meter Type",
-   "options": "\nWired \nWieless"
+   "options": "\nWired\nWieless"
   },
   {
    "fieldname": "plantype",
@@ -111,8 +111,9 @@
   },
   {
    "fieldname": "water_type",
-   "fieldtype": "Data",
-   "label": "Water Type"
+   "fieldtype": "Select",
+   "label": "Water Type",
+   "options": "Cold"
   },
   {
    "fieldname": "appr_month",
@@ -124,7 +125,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-19 13:45:51.993438",
+ "modified": "2025-08-19 17:16:45.137815",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalContracts",
