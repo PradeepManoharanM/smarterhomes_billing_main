@@ -97,7 +97,7 @@ frappe.ui.form.on("RentalInvoices", {
     view_invoice: function(frm) {
 
         frappe.call({
-            method: "propman.propman.doctype.rentalinvoices.rentalinvoices.view_invoice",
+            method: "billing.billing.doctype.rentalinvoices.rentalinvoices.view_invoice",
             args: {
 
                 "doc": frm.doc,
