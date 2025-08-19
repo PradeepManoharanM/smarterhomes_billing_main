@@ -16,7 +16,7 @@
   "phone",
   "email",
   "email_cc",
-  "csm_name",
+  "csm_email",
   "gstin_number"
  ],
  "fields": [
@@ -83,19 +83,19 @@
    "max_height": "200px"
   },
   {
-   "fieldname": "csm_name",
-   "fieldtype": "Data",
-   "label": "CSM Name"
-  },
-  {
    "fieldname": "gstin_number",
    "fieldtype": "Data",
    "label": "GSTIN Number"
+  },
+  {
+   "fieldname": "csm_email",
+   "fieldtype": "Data",
+   "label": "CSM Email"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-07-29 12:04:03.220112",
+ "modified": "2025-08-05 10:56:15.430742",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalCustomers",

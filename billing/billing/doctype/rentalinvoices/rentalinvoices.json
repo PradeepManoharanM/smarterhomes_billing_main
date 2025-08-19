@@ -33,7 +33,7 @@
   {
    "fieldname": "inv_date",
    "fieldtype": "Date",
-   "label": "Invoice Date",
+   "label": "Invoice Month",
    "read_only": 1
   },
   {
@@ -63,7 +63,7 @@
    "fieldname": "monthscharge",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "This Month's Charge",
+   "label": "This Month's Rent",
    "precision": "1",
    "read_only": 1
   },
@@ -187,7 +187,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-07-31 13:27:56.114332",
+ "modified": "2025-08-14 12:30:16.585897",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalInvoices",

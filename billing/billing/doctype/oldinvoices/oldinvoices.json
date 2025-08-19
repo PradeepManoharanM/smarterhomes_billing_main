@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-08-17 12:30:37.959349",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "inv_date",
+  "inv_number",
+  "total_payable",
+  "amt_rcvd",
+  "tds",
+  "property_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "inv_date",
+   "fieldtype": "Date",
+   "label": "Invoice Month"
+  },
+  {
+   "fieldname": "inv_number",
+   "fieldtype": "Data",
+   "label": "Invoice Number"
+  },
+  {
+   "fieldname": "total_payable",
+   "fieldtype": "Float",
+   "label": "Total Payable",
+   "precision": "2"
+  },
+  {
+   "fieldname": "amt_rcvd",
+   "fieldtype": "Float",
+   "label": "Amount Recd",
+   "precision": "2"
+  },
+  {
+   "fieldname": "tds",
+   "fieldtype": "Float",
+   "label": "TDS",
+   "precision": "2"
+  },
+  {
+   "fieldname": "property_name",
+   "fieldtype": "Data",
+   "label": "Property"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-08-17 12:49:26.729493",
+ "modified_by": "Administrator",
+ "module": "Billing",
+ "name": "OldInvoices",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
