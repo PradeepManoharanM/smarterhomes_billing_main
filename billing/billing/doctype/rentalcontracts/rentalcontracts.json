@@ -83,14 +83,9 @@
   },
   {
    "fieldname": "plantype",
-<<<<<<< HEAD
    "fieldtype": "Select",
    "label": "Plan",
    "options": "\nEssential+/Cold\nWaterOn Comfort Plan\nComfort/Cold\nComfort+/Cold\nEssential/Cold\nWaterOn Pro Plan\nOne time sale\nWaterOn Lite Plan\nEssential/Hot\nWateron Essential Plan\nWater On Comfort/Cold Monthly Plan\nComfort/Cold Monthly Plan\nWateron Essential Pl"
-=======
-   "fieldtype": "Data",
-   "label": "Plan"
->>>>>>> 79ac5c4 (Feat:New fields added in rentalcontracts,rentalcustomer,rentalinvoices)
   },
   {
    "default": "10",
@@ -129,10 +124,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
-<<<<<<< HEAD
  "modified": "2025-08-19 13:45:51.993438",
-=======
->>>>>>> 79ac5c4 (Feat:New fields added in rentalcontracts,rentalcustomer,rentalinvoices)
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalContracts",
