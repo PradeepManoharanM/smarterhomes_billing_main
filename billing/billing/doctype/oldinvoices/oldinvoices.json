@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format: LINV{########}",
  "creation": "2025-08-17 12:30:37.959349",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,12 +11,17 @@
   "total_payable",
   "amt_rcvd",
   "tds",
-  "property_name"
+  "property_name",
+  "pdf"
  ],
  "fields": [
   {
    "fieldname": "inv_date",
    "fieldtype": "Date",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Invoice Month"
   },
   {
@@ -26,16 +32,26 @@
   {
    "fieldname": "total_payable",
    "fieldtype": "Float",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Total Payable",
    "precision": "2"
   },
   {
+   "default": "0",
    "fieldname": "amt_rcvd",
    "fieldtype": "Float",
-   "label": "Amount Recd",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
+   "label": "Amount Paid",
    "precision": "2"
   },
   {
+   "default": "0",
    "fieldname": "tds",
    "fieldtype": "Float",
    "label": "TDS",
@@ -44,15 +60,26 @@
   {
    "fieldname": "property_name",
    "fieldtype": "Data",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Property"
+  },
+  {
+   "default": "''",
+   "fieldname": "pdf",
+   "fieldtype": "Data",
+   "label": "Pdf name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-17 12:49:26.729493",
+ "modified": "2025-08-24 14:56:42.038803",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "OldInvoices",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
