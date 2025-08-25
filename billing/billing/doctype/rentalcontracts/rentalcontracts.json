@@ -113,7 +113,7 @@
    "fieldname": "water_type",
    "fieldtype": "Select",
    "label": "Water Type",
-   "options": "Cold"
+   "options": "\nCold\nHot"
   },
   {
    "fieldname": "appr_month",
@@ -125,7 +125,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-19 17:16:45.137815",
+ "modified": "2025-08-25 16:23:21.931229",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalContracts",
