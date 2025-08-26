@@ -7,7 +7,7 @@ frappe.ui.form.on("RentalInvoices", {
             $('.prev-doc').hide();
             $('.next-doc').hide();
             // frm.disable_save();
-            set_fields_readonly_based_on_inv_date(frm);
+            // set_fields_readonly_based_on_inv_date(frm);
             toggle_recalculate_button(frm);
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
