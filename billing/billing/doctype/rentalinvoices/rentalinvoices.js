@@ -61,39 +61,36 @@ frappe.ui.form.on("RentalInvoices", {
 
 
     approve_and_email_invoice: function(frm) {
-        if (!frm.doc.property_name || !frm.doc.inv_date) {
-            frappe.msgprint("Please fill both Property Name and Invoice Date.");
-            return;
-        }
+    const propertyName = frm.doc.property_name;
+    const invDate = frm.doc.inv_date;
 
-        const payload = {
-            // request: "approve",
-            property_name: frm.doc.property_name,
-            date: frm.doc.inv_date
-        };
+    if (!propertyName || !invDate) {
+        frappe.msgprint("Please ensure both Property Name and Invoice Date are filled.");
+        return;
+    }
 
-        fetch('https://propmandev.wateron.cc:8881', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(payload)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("HTTP error " + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("Success:", data);
-            frappe.msgprint("Approval request sent successfully.");
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            frappe.msgprint("Failed to send approval request. Check console.");
-        });
-    },
+    frappe.call({
+        method: "billing.billing.doctype.rentalinvoices.rentalinvoices.approve_and_email_invoice",
+        args: {
+            property_name: propertyName,
+            date: invDate
+        },
+        callback: function(r) {
+            frappe.msgprint({
+                title: "Approval Result",
+                message: JSON.stringify(r.message),
+                indicator: "green"
+            });
+        },
+        // error: function(err) {
+        //     frappe.msgprint({
+        //         title: "Recalculation Failed",
+        //         message: "Backend call failed.",
+        //         indicator: "red"
+        //     });
+        // }
+    });
+},
     view_invoice: function(frm) {
 
         frappe.call({
