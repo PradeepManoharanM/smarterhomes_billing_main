@@ -41,15 +41,4 @@ def view_invoice(doc):
 
 @frappe.whitelist()
 def call_recalculate_invoice(property_name, date):
-    url = "https://propmandev.wateron.cc:8881"
-    headers = {"Content-Type": "application/json"}
-    payload = {
-        "property_name": property_name,
-        "date": date
-    }
-
-    response = requests.post(url, headers=headers, json=payload)
-    try:
-        return response.json()
-    except Exception:
-        return {"status": "fail", "detail": response.text}
+    return "Hello"

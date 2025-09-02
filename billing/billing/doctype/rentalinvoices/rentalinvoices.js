@@ -7,7 +7,7 @@ frappe.ui.form.on("RentalInvoices", {
             $('.prev-doc').hide();
             $('.next-doc').hide();
             // frm.disable_save();
-            // set_fields_readonly_based_on_inv_date(frm);
+            set_fields_readonly_based_on_inv_date(frm);
             toggle_recalculate_button(frm);
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
@@ -105,6 +105,21 @@ frappe.ui.form.on("RentalInvoices", {
     },
     discount: function(frm) {
         toggle_recalculate_button(frm);
+    },
+
+    discount: function(frm) {
+
+        const dirty_fields = frm.get_dirty_fields();
+        
+        if (dirty_fields.hasOwnProperty('discount')) {
+
+            frm.set_df_property('re_calculate_invoice', 'read_only', 0);
+        } else {
+
+            frm.set_df_property('re_calculate_invoice', 'read_only', 1);
+        }
+
+        frm.refresh_field('re_calculate_invoice');
     }
 
 });
@@ -118,15 +133,23 @@ function set_fields_readonly_based_on_inv_date(frm) {
     const sameMonth = (invDate.getMonth() === today.getMonth()) &&
                       (invDate.getFullYear() === today.getFullYear());
 
+    const prevMonth = new Date(today);
+    prevMonth.setMonth(today.getMonth() - 1);
+
+    const previousMonth = (invDate.getMonth() === prevMonth.getMonth()) &&
+                          (invDate.getFullYear() === prevMonth.getFullYear());
+
+    const editable = sameMonth || previousMonth;
+
     const fields = ['discount', 'amt_rcvd', 'tds'];
 
     fields.forEach(field => {
-        frm.set_df_property(field, 'read_only', !sameMonth);
+        frm.set_df_property(field, 'read_only', !editable);
     });
 
-    // If switching from read-only to editable, refresh the fields to reflect it
     frm.refresh_fields(fields);
 }
+
 
 function toggle_recalculate_button(frm) {
     const is_dirty = frm.is_dirty();  // Checks if anything changed
