@@ -6,9 +6,10 @@ frappe.ui.form.on("RentalInvoices", {
             $('.form-sidebar').hide();
             $('.prev-doc').hide();
             $('.next-doc').hide();
+            frm.set_df_property('re_calculate_invoice', 'read_only', 1);
             // frm.disable_save();
             set_fields_readonly_based_on_inv_date(frm);
-            toggle_recalculate_button(frm);
+            // toggle_recalculate_button(frm);
             if (!frappe.user.has_role('Administrator')) {
                 $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
               
