@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 import requests
 
+from billing.utils.invoicer.sendemail import sendMail
 
 
 class RentalInvoices(Document):
@@ -41,12 +42,24 @@ def view_invoice(doc):
 
 @frappe.whitelist()
 def call_recalculate_invoice(property_name, date):
-    if property_name and date:
-        frappe.msgprint(f"Recalculate invoice for {property_name} on {date}")
-    return property_name
+    frappe.log_error("Reached call_recalculate_invoice", "DEBUG")
 
-@frappe.whitelist(allow_guest=True)
-def payment_receive(param1=None, param2=None):
+    # ✅ Construct email
+    sender = sendMail()
+    to_list = ["tittoanmathews@gmail.com"]   # Replace with dynamic recipients if needed
+    cc_list = ["tittoamathews@gmail.com"]
+    subject = f"Invoice Recalculation for {property_name} - {date}"
+
+    # Example: use a static HTML template in your app (like mail.html)
+    html_file = "/home/frappe/frappe-bench/apps/billing/billing/utils/invoicer/mail.html"
+    with open(html_file) as hf:
+        html = hf.read()
+
+    # ✅ Send email
+    sender.send(to_list, subject, html, cc_list)
+
     return {
-        "message": f"You sent param1={param1}, param2={param2}"
+        "status": "success",
+        "message": f"Email sent to {', '.join(to_list)} with subject '{subject}'"
     }
+

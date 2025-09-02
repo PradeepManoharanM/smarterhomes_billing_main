@@ -34,6 +34,10 @@
   {
    "fieldname": "orig_rent",
    "fieldtype": "Float",
+   "in_filter": 1,
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Orig Meter Rent",
    "precision": "2"
   },
@@ -49,7 +53,6 @@
    "default": "5",
    "fieldname": "appr_rate",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "Appreciation Rate %",
    "non_negative": 1,
    "reqd": 1
@@ -58,7 +61,6 @@
    "default": "12",
    "fieldname": "appr_period",
    "fieldtype": "Int",
-   "in_list_view": 1,
    "label": "Appreciation Period (months)",
    "non_negative": 1,
    "reqd": 1
@@ -125,7 +127,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-25 16:23:21.931229",
+ "modified": "2025-09-01 18:50:47.231697",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalContracts",
