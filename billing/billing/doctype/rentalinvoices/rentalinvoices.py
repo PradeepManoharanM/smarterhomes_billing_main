@@ -41,4 +41,6 @@ def view_invoice(doc):
 
 @frappe.whitelist()
 def call_recalculate_invoice(property_name, date):
-    return "Hello"
+    if property_name and date:
+        frappe.msgprint(f"Recalculate invoice for {property_name} on {date}")
+    return property_name
