@@ -44,3 +44,9 @@ def call_recalculate_invoice(property_name, date):
     if property_name and date:
         frappe.msgprint(f"Recalculate invoice for {property_name} on {date}")
     return property_name
+
+@frappe.whitelist(allow_guest=True)
+def payment_receive(param1=None, param2=None):
+    return {
+        "message": f"You sent param1={param1}, param2={param2}"
+    }
