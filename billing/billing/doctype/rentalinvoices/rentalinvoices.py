@@ -95,4 +95,3 @@ def call_recalculate_invoice(property_name, date):
         "status": "success",
         "message": f"Email sent to {', '.join(to_list)} with subject '{subject}'"
     }
-
