@@ -92,19 +92,20 @@ frappe.listview_settings['RentalInvoices'] = {
                 return;
             }
 
-            selected.forEach(row => {
-                frappe.call({
-                    method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
-                    args: { docname: row.name },
-                    callback: function (r) {
-                        if (!r.exc) {
-                            frappe.msgprint(`Approved: ${row.name}`);
-                            listview.refresh();
-                        }
+            const names = selected.map(row => row.name);
+
+            frappe.call({
+                method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
+                args: { docnames: names },
+                callback: function (r) {
+                    if (!r.exc) {
+                        frappe.msgprint(`Approved: ${names.join(", ")}`);
+                        listview.refresh();
                     }
-                });
+                }
             });
         });
+
 
         // Hide sidebar and buttons for non-admins
         if (!frappe.user.has_role('Administrator')) {

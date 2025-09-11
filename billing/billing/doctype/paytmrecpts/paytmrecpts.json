@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-09-11 10:57:10.760557",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "property_name",
+  "recd_date",
+  "amount",
+  "txion_id",
+  "order_id"
+ ],
+ "fields": [
+  {
+   "fieldname": "property_name",
+   "fieldtype": "Link",
+   "label": "Property",
+   "options": "RentalCustomers"
+  },
+  {
+   "fieldname": "recd_date",
+   "fieldtype": "Date",
+   "label": "Received On"
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Float",
+   "label": "Amount",
+   "precision": "2"
+  },
+  {
+   "fieldname": "txion_id",
+   "fieldtype": "Data",
+   "label": "Transaction ID"
+  },
+  {
+   "fieldname": "order_id",
+   "fieldtype": "Data",
+   "label": "Order ID"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-09-11 11:00:34.803520",
+ "modified_by": "Administrator",
+ "module": "Billing",
+ "name": "PayTMRecpts",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

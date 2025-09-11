@@ -10,6 +10,7 @@
   "meter_count",
   "rates",
   "monthscharge",
+  "billable_days",
   "column_break_wgvk",
   "acct_number",
   "inv_number",
@@ -27,12 +28,16 @@
   "column_break_ppkr",
   "inv_status",
   "amt_rcvd",
-  "tds"
+  "tds",
+  "pdfpath"
  ],
  "fields": [
   {
    "fieldname": "inv_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "in_standard_filter": 1,
    "label": "Invoice Month",
    "read_only": 1
   },
@@ -64,7 +69,7 @@
    "fieldtype": "Float",
    "in_list_view": 1,
    "label": "This Month's Rent",
-   "precision": "1",
+   "precision": "2",
    "read_only": 1
   },
   {
@@ -158,6 +163,7 @@
    "fieldname": "inv_status",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Invoice Status",
    "options": "Generated\nApproved\nSent\nReGenerated",
@@ -182,12 +188,21 @@
    "fieldtype": "Data",
    "hidden": 1,
    "label": "ID"
+  },
+  {
+   "fieldname": "pdfpath",
+   "fieldtype": "Data"
+  },
+  {
+   "fieldname": "billable_days",
+   "fieldtype": "Int",
+   "label": "Billable Days"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-14 12:30:16.585897",
+ "modified": "2025-09-10 19:39:45.545707",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalInvoices",
