@@ -6,7 +6,6 @@ from frappe import _
 from frappe.model.document import Document
 import requests
 
-from billing.utils.invoicer.sendemail import sendMail
 
 
 class RentalInvoices(Document):
@@ -94,4 +93,11 @@ def call_recalculate_invoice(property_name, date):
     return {
         "status": "success",
         "message": f"Email sent to {', '.join(to_list)} with subject '{subject}'"
+    }
+
+
+@frappe.whitelist(allow_guest=True)
+def payment_receive(param1=None, param2=None):
+    return {
+        "message": f"You sent param1={param1}, param2={param2}"
     }
