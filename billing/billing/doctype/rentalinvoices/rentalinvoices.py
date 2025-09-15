@@ -6,98 +6,53 @@ from frappe import _
 from frappe.model.document import Document
 import requests
 
+from billing.utils.Invoicer import InvoiceIf
 
 
 class RentalInvoices(Document):
 	pass
 
-count = 0;
+count = 0
 
+# Handler for approve action. Arg: List of inv_numbers
 @frappe.whitelist()
-def approve_action(docnames):
+def approve_action(invlist):
     """
     Approve multiple RentalInvoices in one call.
-    `docnames` will be a JSON list from the client.
+    arg: list of invoice numbers
     """
-    import json
+    InvoiceIf.ApproveInvoice(invlist)
+    invs = ",".join(invlist) 
+    return {
+        "status": "success",
+        "message": "Approved: " + invs
+    }
 
-    if isinstance(docnames, str):
-        docnames = json.loads(docnames)
 
-    for name in docnames:
-        # doc = frappe.get_doc("RentalInvoices", name)
-        # your approval logic here
-        frappe.msgprint(f"Custom approval logic executed for {name}")
+# Approve button on invoice page
+@frappe.whitelist()
+def approve_and_email_invoice(invNumber):
 
-    return True
-
-    
+    InvoiceIf.ApproveInvoice([invNumber])
+    return {
+        "status": "success",
+        "message": "Approved" + invNumber
+    }
 
 @frappe.whitelist()
-def calculate_invoice(doc):
-    doc = frappe._dict(frappe.parse_json(doc))
-    
-    frappe.msgprint(_("Invoice recalculated for: {0}").format(doc.get("name")))
-
-@frappe.whitelist()
-def approve_and_email_invoice(property_name, date):
-    frappe.log_error("Reached approve_and_email_invoice", "DEBUG")
-
-    # ✅ Construct email
-    sender = sendMail()
-    to_list = ["tittoanmathews@gmail.com"]   # Replace with dynamic recipients if needed
-    cc_list = ["tittoamathews@gmail.com"]
-    subject = f"approve_and_email_invoice for {property_name} - {date}"
-
-    # Example: use a static HTML template in your app (like mail.html)
-    html_file = "/home/frappe/frappe-bench/apps/billing/billing/utils/invoicer/mail.html"
-    with open(html_file) as hf:
-        html = hf.read()
-
-    # ✅ Send email
-    sender.send(to_list, subject, html, cc_list)
+def recalculate_invoice(invNumber):
+    frappe.msgprint("Approve Action: " + invNumber)
 
     return {
         "status": "success",
-        "message": f"Email sent to {', '.join(to_list)} with subject '{subject}'"
+        "message": f"Success with " + invNumber
     }
 
 @frappe.whitelist()
-def view_invoice(doc):
-    global count
-    count += 1
-    doc = frappe._dict(frappe.parse_json(doc))
-
-    frappe.msgprint(f"{count} Viewing invoice: {doc.get('name')}")
-
-
-
-@frappe.whitelist()
-def call_recalculate_invoice(property_name, date):
-    frappe.log_error("Reached call_recalculate_invoice", "DEBUG")
-
-    # ✅ Construct email
-    sender = sendMail()
-    to_list = ["tittoanmathews@gmail.com"]   # Replace with dynamic recipients if needed
-    cc_list = ["tittoamathews@gmail.com"]
-    subject = f"Invoice Recalculation for {property_name} - {date}"
-
-    # Example: use a static HTML template in your app (like mail.html)
-    html_file = "/home/frappe/frappe-bench/apps/billing/billing/utils/invoicer/mail.html"
-    with open(html_file) as hf:
-        html = hf.read()
-
-    # ✅ Send email
-    sender.send(to_list, subject, html, cc_list)
-
+def appreciation_list():
+    Csv = InvoiceIf.GetAppreciationList()
     return {
         "status": "success",
-        "message": f"Email sent to {', '.join(to_list)} with subject '{subject}'"
+        "message": Csv
     }
 
-
-@frappe.whitelist(allow_guest=True)
-def payment_receive(param1=None, param2=None):
-    return {
-        "message": f"You sent param1={param1}, param2={param2}"
-    }

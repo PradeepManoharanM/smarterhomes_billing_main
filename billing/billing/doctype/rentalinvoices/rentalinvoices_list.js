@@ -96,10 +96,11 @@ frappe.listview_settings['RentalInvoices'] = {
 
             frappe.call({
                 method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
-                args: { docnames: names },
+                args: { invlist: names },
                 callback: function (r) {
                     if (!r.exc) {
-                        frappe.msgprint(`Approved: ${names.join(", ")}`);
+			msg = JSON.stringify(r.message);
+                        frappe.msgprint(`Approved: ${msg}`);
                         listview.refresh();
                     }
                 }

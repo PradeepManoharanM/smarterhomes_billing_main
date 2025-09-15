@@ -10,7 +10,6 @@
   "meter_count",
   "rates",
   "monthscharge",
-  "billable_days",
   "column_break_wgvk",
   "acct_number",
   "inv_number",
@@ -29,7 +28,8 @@
   "inv_status",
   "amt_rcvd",
   "tds",
-  "pdfpath"
+  "pdfpath",
+  "appreciation_list"
  ],
  "fields": [
   {
@@ -173,7 +173,7 @@
    "fieldname": "amt_rcvd",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "Amount Received against this invoice",
+   "label": "Amount Received this month",
    "precision": "2"
   },
   {
@@ -194,15 +194,15 @@
    "fieldtype": "Data"
   },
   {
-   "fieldname": "billable_days",
-   "fieldtype": "Int",
-   "label": "Billable Days"
+   "fieldname": "appreciation_list",
+   "fieldtype": "Button",
+   "label": "Appreciation List"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-10 19:39:45.545707",
+ "modified": "2025-09-15 09:23:42.395816",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalInvoices",
