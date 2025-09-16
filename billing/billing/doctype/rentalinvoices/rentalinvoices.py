@@ -6,9 +6,6 @@ from frappe import _
 from frappe.model.document import Document
 import requests
 
-from billing.utils.Invoicer import InvoiceIf
-
-
 class RentalInvoices(Document):
 	pass
 
@@ -65,5 +62,10 @@ def payment_receive(param1=None, param2=None):
 
 
 @frappe.whitelist()
+<<<<<<< Updated upstream
 def my_custom_method():
     return {"message": "New from backend!"}
+=======
+def getAppreciationList():
+    return {"message": "Hello from backend!"}
+>>>>>>> Stashed changes
