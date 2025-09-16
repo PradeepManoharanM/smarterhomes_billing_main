@@ -62,10 +62,5 @@ def payment_receive(param1=None, param2=None):
 
 
 @frappe.whitelist()
-<<<<<<< Updated upstream
-def my_custom_method():
-    return {"message": "New from backend!"}
-=======
 def getAppreciationList():
     return {"message": "Hello from backend!"}
->>>>>>> Stashed changes
