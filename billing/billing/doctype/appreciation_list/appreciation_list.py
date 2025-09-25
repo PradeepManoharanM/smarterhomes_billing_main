@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class inv_meter_batch(Document):
+class AppreciationList(Document):
 	pass

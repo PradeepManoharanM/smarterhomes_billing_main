@@ -93,10 +93,10 @@ frappe.listview_settings['RentalInvoices'] = {
             }
 
             const names = selected.map(row => row.name);
-
+            const namelist = names.join(",")
             frappe.call({
                 method: 'billing.billing.doctype.rentalinvoices.rentalinvoices.approve_action',
-                args: { invlist: names },
+                args: { invlist: namelist },
                 callback: function (r) {
                     if (!r.exc) {
 			msg = JSON.stringify(r.message);

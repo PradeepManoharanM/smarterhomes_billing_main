@@ -19,9 +19,9 @@
   "id",
   "section_break_qetg",
   "discount",
+  "re_calculate_invoice",
   "late_fee",
   "total_payable",
-  "re_calculate_invoice",
   "approve_and_email_invoice",
   "view_invoice",
   "column_break_ppkr",
@@ -29,6 +29,7 @@
   "amt_rcvd",
   "tds",
   "pdfpath",
+  "save_amt_rcvd",
   "appreciation_list"
  ],
  "fields": [
@@ -161,12 +162,11 @@
   },
   {
    "fieldname": "inv_status",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "in_preview": 1,
    "in_standard_filter": 1,
    "label": "Invoice Status",
-   "options": "Generated\nApproved\nSent\nReGenerated",
    "read_only": 1
   },
   {
@@ -191,18 +191,24 @@
   },
   {
    "fieldname": "pdfpath",
-   "fieldtype": "Data"
+   "fieldtype": "Data",
+   "hidden": 1
   },
   {
    "fieldname": "appreciation_list",
    "fieldtype": "Button",
    "label": "Appreciation List"
+  },
+  {
+   "fieldname": "save_amt_rcvd",
+   "fieldtype": "Button",
+   "label": "Save Amt Rcvd/TDS"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-15 09:23:42.395816",
+ "modified": "2025-09-20 09:37:57.458562",
  "modified_by": "Administrator",
  "module": "Billing",
  "name": "RentalInvoices",

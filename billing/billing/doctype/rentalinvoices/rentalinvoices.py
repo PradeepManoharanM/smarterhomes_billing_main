@@ -6,6 +6,9 @@ from frappe import _
 from frappe.model.document import Document
 import requests
 
+from billing.utils.Invoicer import InvoiceIf
+
+
 class RentalInvoices(Document):
 	pass
 
@@ -16,13 +19,13 @@ count = 0
 def approve_action(invlist):
     """
     Approve multiple RentalInvoices in one call.
-    arg: list of invoice numbers
+    arg: CSV list of invoice numbers
     """
-    InvoiceIf.ApproveInvoice(invlist)
-    invs = ",".join(invlist) 
+    invs = invlist.split(',')
+    InvoiceIf.ApproveInvoice(invs)
     return {
         "status": "success",
-        "message": "Approved: " + invs
+        "message": "Approved: " + invlist
     }
 
 
@@ -30,19 +33,19 @@ def approve_action(invlist):
 @frappe.whitelist()
 def approve_and_email_invoice(invNumber):
 
-    InvoiceIf.ApproveInvoice([invNumber])
+    res = InvoiceIf.ApproveInvoice([invNumber])
     return {
         "status": "success",
-        "message": "Approved" + invNumber
+        "message": res
     }
 
 @frappe.whitelist()
 def recalculate_invoice(invNumber):
-    frappe.msgprint("Approve Action: " + invNumber)
 
+    res = InvoiceIf.RegenerateInvoice(invNumber)
     return {
         "status": "success",
-        "message": f"Success with " + invNumber
+        "message": "Regenerated " + invNumber
     }
 
 @frappe.whitelist()
@@ -58,8 +61,6 @@ def payment_receive(param1=None, param2=None):
     return {
         "message": f"You sent param1={param1}, param2={param2}"
     }
-
-
 
 @frappe.whitelist()
 def getAppreciationList():

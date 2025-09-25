@@ -6,10 +6,8 @@ frappe.ui.form.on("RentalInvoices", {
         $('.form-sidebar').hide();
         $('.prev-doc').hide();
         $('.next-doc').hide();
-        frm.set_df_property('re_calculate_invoice', 'read_only', 2);
-        // frm.disable_save();
+        frm.disable_save();
         // set_fields_readonly_based_on_inv_date(frm);
-        // toggle_recalculate_button(frm);
         if (!frappe.user.has_role('Administrator')) {
             $("#navbar-breadcrumbs").css({ 'visibility': 'hidden' });
 
@@ -26,34 +24,68 @@ frappe.ui.form.on("RentalInvoices", {
         }
     },
 
-
     re_calculate_invoice: function (frm) {
         const invNumber = frm.doc.inv_number;
+        const status = frm.doc.inv_status;
 
-        frappe.call({
-            method: "billing.billing.doctype.rentalinvoices.rentalinvoices.recalculate_invoice",
-            args: {
-                invNumber: invNumber
-            },
-            callback: function (r) {
-                frappe.msgprint({
-                    title: "Recalculation Result",
-                    message: JSON.stringify(r.message),
-                    indicator: "green"
-                });
-            },
-            error: function (err) {
-                frappe.msgprint({
-                    title: "Recalculation Failed",
-                    message: "Backend call failed.",
-                    indicator: "red"
-                });
-            }
-        });
+        function ReCalculate(invN){     // Call backend python to re-calculate
+             frappe.call({
+                method: "billing.billing.doctype.rentalinvoices.rentalinvoices.recalculate_invoice",
+                args: {
+                    invNumber: invN
+                },
+                callback: function (r) {
+                    frappe.msgprint("Re calculated " + invN + '. You need to approve it to send to customer.');
+                },
+                error: function (err) {
+                    frappe.msgprint({
+                        title: "Recalculation Failed",
+                        message: "Backend call failed.",
+                        indicator: "red"
+                    });
+                }
+            });
+        }   // End of function
+
+        if (! frm.is_dirty('discount')) {
+            frappe.msgprint("Discount not changed. No re-calculation required.");
+            return;
+        }
+
+        frm.save()          // Save the  form
+            .then(() => {   // On successful save:
+                 if (status.startsWith("Sent")){
+                    let msg = frappe.msgprint({
+                        title: 'Warning',
+                        message: "This invoice is already sent to the customer.<br>Are you sure you want to re-open it?<br>After re-open, you need to approve",
+                        primary_action_label: 'I Understand',
+                        primary_action: {
+                            action(values) {
+                                   msg.hide();
+                                   ReCalculate(invNumber);
+                            }
+                        }
+                    });
+                }
+                else
+                 ReCalculate(invNumber)
+            })
+            .catch(err => {
+                frappe.msgprint(`Failed to save discount: ${err}`);
+            });
     },
 
     approve_and_email_invoice: function (frm) {
         const invNumber = frm.doc.inv_number;
+        let status = frm.doc.inv_status;
+        if (status.startsWith("Sent")){
+            frappe.msgprint({
+                    title: "Already Sent",
+                    message: "This invoice is already sent to customer.",
+                    indicator: "red"
+            });
+            return
+        }
 
         frappe.call({
             method: "billing.billing.doctype.rentalinvoices.rentalinvoices.approve_and_email_invoice",
@@ -67,13 +99,9 @@ frappe.ui.form.on("RentalInvoices", {
                     indicator: "green"
                 });
             },
-            // error: function(err) {
-            //     frappe.msgprint({
-            //         title: "Recalculation Failed",
-            //         message: "Backend call failed.",
-            //         indicator: "red"
-            //     });
-            // }
+            error: function(err) {
+                 frappe.msgprint("Backend error");
+            }
         });
     },
     view_invoice: function (frm) {
@@ -101,6 +129,9 @@ frappe.ui.form.on("RentalInvoices", {
         d.show();
     },
 
+    save_amt_rcvd: function(frm) {      // Save changes to amt_rcvd and tds, if any
+        frm.save();
+    },
     appreciation_list: function(frm){
 	frappe.show_progress('Calculating', 0, 100, 'Please wait...');
 
@@ -130,25 +161,6 @@ frappe.ui.form.on("RentalInvoices", {
 
 	
     },
-    discount: function (frm) {
-        toggle_recalculate_button(frm);
-    },
-
-    discount: function (frm) {
-
-        const dirty_fields = frm.get_dirty_fields();
-
-        if (dirty_fields.hasOwnProperty('discount')) {
-
-            frm.set_df_property('re_calculate_invoice', 'read_only', 0);
-        } else {
-
-            frm.set_df_property('re_calculate_invoice', 'read_only', 1);
-        }
-
-        frm.refresh_field('re_calculate_invoice');
-    }
-
 });
 
 function set_fields_readonly_based_on_inv_date(frm) {
@@ -176,30 +188,3 @@ function set_fields_readonly_based_on_inv_date(frm) {
 
     frm.refresh_fields(fields);
 }
-
-
-function toggle_recalculate_button(frm) {
-    const is_dirty = frm.is_dirty();  // Checks if anything changed
-    const changed_discount = frm.doc.discount !== frm.__last_sync?.discount;
-
-    setTimeout(() => {
-        const button = $('button:contains("Re calculate Invoice")');
-        if (changed_discount) {
-            button.show();
-        } else {
-            button.hide();
-        }
-    }, 100);
-}
-
-
-// function handle_invoice_action(frm, action_type) {
-//     // Centralized logic for all button actions
-//     if (action_type === "recalculate") {
-//         // call API or logic
-//     } else if (action_type === "approve_email") {
-//         // send email logic
-//     } else if (action_type === "view") {
-//         // open PDF or something
-//     }
-// }
